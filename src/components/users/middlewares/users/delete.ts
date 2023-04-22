@@ -7,19 +7,15 @@ export const deleteUserMw = asyncMw<{
   extends: {
     user: BaseUserModel;
   };
-}>(async (req, res, next) => {
-  try {
-    await User.instance.destroy({
-      where: {
-        id: req.user.dataValues.id,
-      },
-    });
+}>(async (req, res) => {
+  await User.instance.destroy({
+    where: {
+      id: req.user.dataValues.id,
+    },
+  });
 
-    return res.json(200).json({
-      ...createCodeStatus(200),
-      message: 'Your account has been deleted successfully',
-    });
-  } catch (err) {
-    return next(err);
-  }
+  return res.json(200).json({
+    ...createCodeStatus(200),
+    message: 'Your account has been deleted successfully',
+  });
 });
