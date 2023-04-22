@@ -11,25 +11,21 @@ export const getUserMw = asyncMw<{
     user: BaseUserModel;
   };
 }>(async (req, res, next) => {
-  try {
-    const user = await User.instance.findOne({
-      where: {
-        id: req.params.id,
-      },
-    });
+  const user = await User.instance.findOne({
+    where: {
+      id: req.params.id,
+    },
+  });
 
-    if (!user) {
-      return res
-        .json(400)
-        .json(createNotFoundResponse(`User with id ${req.params.id}`));
-    }
-
-    req.user = user;
-
-    return next();
-  } catch (err) {
-    return next(err);
+  if (!user) {
+    return res
+      .json(400)
+      .json(createNotFoundResponse(`User with id ${req.params.id}`));
   }
+
+  req.user = user;
+
+  return next();
 });
 
 export const getUsersMw = asyncMw<{
@@ -40,17 +36,13 @@ export const getUsersMw = asyncMw<{
     };
   };
 }>(async (req, res, next) => {
-  try {
-    const users = await User.instance.factory.findAll(
-      {},
-      req.filterQueryParams,
-      req.query
-    );
+  const users = await User.instance.factory.findAll(
+    {},
+    req.filterQueryParams,
+    req.query
+  );
 
-    req.users = users;
+  req.users = users;
 
-    return next();
-  } catch (err) {
-    return next(err);
-  }
+  return next();
 });

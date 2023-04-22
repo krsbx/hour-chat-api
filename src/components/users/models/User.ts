@@ -3,6 +3,7 @@ import { Database } from 'sequelize-db-type/helper';
 import factory from '../../../shares/factory';
 import { CreateUserAttribute, UserAttribute } from './attributes';
 import UserFactory from './UserFactory';
+import postFactory from './postFactory';
 
 function init(sequelize: Sequelize, DataTypes: typeof DT) {
   class User extends Model<UserAttribute, CreateUserAttribute> {
@@ -11,9 +12,11 @@ function init(sequelize: Sequelize, DataTypes: typeof DT) {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     static associate(models: Database) {
-      // define association here
+      User.hasOne(models['user-locations'], {
+        foreignKey: 'userId',
+        as: 'userLocation',
+      });
     }
   }
 
@@ -71,7 +74,10 @@ function init(sequelize: Sequelize, DataTypes: typeof DT) {
     }
   );
 
-  UserFactory.init(factory(User) as never);
+  const factored = factory(User);
+  postFactory(User as never);
+
+  UserFactory.init(factored as never);
 
   return User;
 }
