@@ -1,6 +1,6 @@
-import { Migration } from 'sequelize-cli';
+import Sequel, { QueryInterface } from 'sequelize';
 
 export default {
-  async up(queryInterface, Sequelize) {},
-  async down(queryInterface, Sequelize) {},
-} as Migration;
+  async up(queryInterface: QueryInterface, Sequelize: typeof Sequel) {},
+  async down(queryInterface: QueryInterface, Sequelize: typeof Sequel) {},
+};
