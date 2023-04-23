@@ -17,6 +17,11 @@ function init(sequelize: Sequelize, DataTypes: typeof DT) {
         foreignKey: 'userId',
         as: 'userLocation',
       });
+
+      User.hasMany(models['device-tokens'], {
+        foreignKey: 'userId',
+        as: 'deviceToken',
+      });
     }
   }
 
