@@ -17,7 +17,7 @@ router.post(
   '/register',
   middlewares.users.common.validateCreateUserPayloadMw,
   middlewares.users.create.createUserMw,
-  middlewares.users.response.returnUsersMw
+  middlewares.users.response.returnUserMw
 );
 
 export default router;

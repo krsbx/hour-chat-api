@@ -39,6 +39,7 @@ function init(sequelize: Sequelize, DataTypes: typeof DT) {
       },
       middleName: {
         allowNull: true,
+        defaultValue: null,
         type: DataTypes.STRING,
       },
       lastName: {
