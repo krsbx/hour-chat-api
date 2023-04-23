@@ -1,8 +1,8 @@
-import express, { NextFunction } from 'express';
+import { NextFunction } from 'express';
 import asyncMw from 'express-asyncmw';
 import SequelizeFQP from '@krsbx/sequelize-fqp';
 import { ZodError } from 'zod';
-import { ValidationError } from 'sequelize';
+import { UniqueConstraintError, ValidationError } from 'sequelize';
 import { createCodeStatus } from '@krsbx/response-formatter';
 import { pick } from '../common';
 
@@ -30,9 +30,15 @@ export const errorHandlerMw = (
 ) => {
   if (!err) return next();
 
-  if (err instanceof ZodError || err instanceof ValidationError) {
+  if (
+    err instanceof ZodError ||
+    err instanceof ValidationError ||
+    err instanceof UniqueConstraintError
+  ) {
     return res.status(400).json(pick(err, ['name', 'errors']));
   }
+
+  console.log(err);
 
   return res.status(500).json(createCodeStatus(500));
 };

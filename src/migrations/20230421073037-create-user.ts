@@ -15,6 +15,7 @@ export default {
       },
       middleName: {
         allowNull: true,
+        defaultValue: null,
         type: Sequelize.STRING,
       },
       lastName: {
