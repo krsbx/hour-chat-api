@@ -10,7 +10,7 @@ import {
 function postFactory(factoryModel: UserLocationModel) {
   async function modelToResource<
     TModel extends BaseUserLocationModel,
-    TResource extends Omit<UserLocationAttribute, 'password' | 'updatedAt'>
+    TResource extends Omit<UserLocationAttribute, 'createdAt' | 'updatedAt'>
   >(model: TModel) {
     const resource = model.toJSON?.();
 

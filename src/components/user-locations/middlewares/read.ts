@@ -43,6 +43,8 @@ export const getUserLocationsMw = asyncMw<{
     req.filterQueryParams,
     req.query
   );
+
   req.userLocations = userLocations;
+
   return next();
 });
