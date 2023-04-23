@@ -5,7 +5,7 @@ import { BaseUserLocationModel } from '../models/attributes';
 import UserLocation from '../models';
 
 export const createUserLocationMw = asyncMw<{
-  reqBody: z.infer<(typeof schema)['userLocations']['userLocationSchema']>;
+  reqBody: z.infer<(typeof schema.userLocations)['userLocationSchema']>;
   params: {
     userId: string;
   };
@@ -13,9 +13,14 @@ export const createUserLocationMw = asyncMw<{
     userLocation: BaseUserLocationModel;
   };
 }>(async (req, res, next) => {
+  const { lat, lng } = req.body;
+
   const [userLocation] = await UserLocation.instance.upsert({
-    ...req.body,
     userId: +req.params.userId,
+    location: {
+      type: 'Point',
+      coordinates: [lng, lat],
+    },
   });
 
   req.userLocation = userLocation;

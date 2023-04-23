@@ -7,7 +7,7 @@ import User from '../../models';
 import { BaseUserModel } from '../../models/attributes';
 
 export const getUserByPayloadMw = asyncMw<{
-  reqBody: z.infer<(typeof schema)['auth']['loginUserSchema']>;
+  reqBody: z.infer<(typeof schema.auth)['loginUserSchema']>;
 }>(async (req, res, next) => {
   let user: BaseUserModel | null = null;
 

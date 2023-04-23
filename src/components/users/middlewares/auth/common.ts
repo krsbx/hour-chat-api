@@ -6,7 +6,7 @@ import { BaseUserModel } from '../../models/attributes';
 import { signAccessToken } from '../../utils/jwt';
 
 export const validateUserLoginPayloadMw = asyncMw<{
-  reqBody: z.infer<(typeof schema)['auth']['loginUserSchema']>;
+  reqBody: z.infer<(typeof schema.auth)['loginUserSchema']>;
 }>(async (req, res, next) => {
   await schema.auth.loginUserSchema.parseAsync(req.body);
 
