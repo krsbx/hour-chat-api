@@ -1,4 +1,5 @@
+import * as common from './common';
 import * as groupMessage from './group-message';
 import * as privateMessage from './private-message';
 
-export default { groupMessage, privateMessage };
+export default { common, groupMessage, privateMessage };

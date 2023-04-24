@@ -14,4 +14,6 @@ export const ENV_NAMES = [
   'DB_SCHEMA',
   'JWT_SECRET',
   'CHAT_BASE_PATH',
+  'ENCRYPT_KEY',
+  'ENCRYPT_IV',
 ];
