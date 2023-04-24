@@ -130,3 +130,6 @@ dist
 .pnp.*
 
 firebase-service-account.json
+
+# Test file regarding testing of a functions
+src/test.ts
