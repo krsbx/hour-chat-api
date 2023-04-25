@@ -1,5 +1,5 @@
 import { Model, ModelStatic } from 'sequelize';
-import { GeoJson } from 'sequelize-db-type/types';
+import { GeoJson, GeoJsons } from 'sequelize-db-type/types';
 import { CreateOptional } from '../../../types/utils';
 import factory from '../../../shares/factory';
 // eslint-disable-next-line import/no-cycle
@@ -8,7 +8,7 @@ import postFactory from './postFactory';
 export type UserLocationAttribute = {
   id: number;
   userId: number;
-  location: GeoJson;
+  location: GeoJsons['Point'];
   createdAt: Date;
   updatedAt: Date;
 };
