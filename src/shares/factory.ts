@@ -33,7 +33,7 @@ function factory<
   ) {
     const limit = +(query.limit === 'all' ? 0 : _.get(query, 'limit', 10));
     const offset = query.page && query.page > 0 ? limit * (query.page - 1) : 0;
-    const order =
+    let order =
       query.order && _.isArray(query.order)
         ? _.compact(query.order)
         : _.compact([query.order]);
@@ -51,6 +51,16 @@ function factory<
       where[AND] = [...where[AND], ...rules];
     } else {
       where[AND] = rules;
+    }
+
+    if (options.order) {
+      order = _([...(options.order as never), order])
+        .filter(_.length)
+        .compact()
+        .value();
+
+      // eslint-disable-next-line no-param-reassign
+      delete options.order;
     }
 
     const queries = {

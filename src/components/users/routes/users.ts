@@ -14,13 +14,24 @@ router.post(
 // GET /users
 router.get(
   '/',
+  middlewares.auth.common.validateUserAccessTokenMw,
   middlewares.users.read.getUsersMw,
+  middlewares.users.response.returnUsersMw
+);
+
+// GET /users/near-me
+router.get(
+  '/near-me',
+  middlewares.auth.common.validateUserAccessTokenMw,
+  middlewares.users.read.getNearMeUsersMw,
   middlewares.users.response.returnUsersMw
 );
 
 // GET /users/:id
 router.post(
   '/:id',
+  middlewares.auth.common.validateUserAccessTokenMw,
+  middlewares.auth.common.validateUserAccessMw,
   middlewares.users.read.getUserMw,
   middlewares.users.response.returnUserMw
 );
@@ -28,6 +39,8 @@ router.post(
 // PATCH /users/:id
 router.patch(
   '/:id',
+  middlewares.auth.common.validateUserAccessTokenMw,
+  middlewares.auth.common.validateUserAccessMw,
   middlewares.users.common.validateUpdateUserPayloadMw,
   middlewares.users.read.getUserMw,
   middlewares.users.update.updateUserMw,
@@ -37,6 +50,8 @@ router.patch(
 // DELETE /users/:id
 router.delete(
   '/:id',
+  middlewares.auth.common.validateUserAccessTokenMw,
+  middlewares.auth.common.validateUserAccessMw,
   middlewares.users.read.getUserMw,
   middlewares.users.delete.deleteUserMw
 );
