@@ -3,6 +3,7 @@ import { Database } from 'sequelize-db-type/helper';
 import {
   CreateUserLocationAttribute,
   UserLocationAttribute,
+  UserLocationModel,
 } from './attributes';
 import UserLocationFactory from './UserLocationFactory';
 import factory from '../../../shares/factory';
@@ -70,7 +71,7 @@ function init(sequelize: Sequelize, DataTypes: typeof DT) {
 
   UserLocationFactory.init(factored as never);
 
-  return UserLocation;
+  return UserLocation as unknown as UserLocationModel;
 }
 
 export default init;

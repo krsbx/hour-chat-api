@@ -1,6 +1,10 @@
 import { DataTypes as DT, Model, Sequelize } from 'sequelize';
 import { Database } from 'sequelize-db-type/helper';
-import { CreateDeviceTokenAttribute, DeviceTokenAttribute } from './attributes';
+import {
+  CreateDeviceTokenAttribute,
+  DeviceTokenAttribute,
+  DeviceTokenModel,
+} from './attributes';
 import factory from '../../../shares/factory';
 import postFactory from './postFactory';
 import DeviceTokenFactory from './DeviceTokenFactory';
@@ -68,7 +72,7 @@ function init(sequelize: Sequelize, DataTypes: typeof DT) {
 
   DeviceTokenFactory.init(factored as never);
 
-  return DeviceToken;
+  return DeviceToken as unknown as DeviceTokenModel;
 }
 
 export default init;
