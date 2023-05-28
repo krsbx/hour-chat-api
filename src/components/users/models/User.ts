@@ -1,7 +1,7 @@
 import { DataTypes as DT, Model, Sequelize } from 'sequelize';
 import { Database } from 'sequelize-db-type/helper';
 import factory from '../../../shares/factory';
-import { CreateUserAttribute, UserAttribute } from './attributes';
+import { CreateUserAttribute, UserAttribute, UserModel } from './attributes';
 import UserFactory from './UserFactory';
 import postFactory from './postFactory';
 
@@ -85,7 +85,7 @@ function init(sequelize: Sequelize, DataTypes: typeof DT) {
 
   UserFactory.init(factored as never);
 
-  return User;
+  return User as unknown as UserModel;
 }
 
 export default init;
