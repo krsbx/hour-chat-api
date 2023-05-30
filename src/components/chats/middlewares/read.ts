@@ -56,13 +56,13 @@ export const checkGroupMessageUsersExistsMw = asyncMw<{
     _.map(req.body.members, (member) =>
       User.instance.findOne({
         where: {
-          id: member as number,
+          id: member,
         },
       })
     )
   );
 
-  if (_.compact(members).length !== req.body.members.size) {
+  if (_.compact(members).length !== req.body.members.length) {
     return res.status(400).json({
       ...createCodeStatus(400),
       message: `Some of the member are invalid`,

@@ -1,0 +1,25 @@
+version: '3.7'
+services:
+  # Postgres Service + PostGIS installed
+  db:
+    image: postgis/postgis
+    container_name: hourchat_db
+    restart: always
+    ports:
+      - ${DB_PORT}:5432
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASS}
+    networks:
+      - hourchat-network
+    volumes:
+      - ./tmp/hourchat-postgis-data:/var/lib/postgresql/data/
+
+volumes:
+  hourchat-postgis-data:
+
+# Docker Networks
+networks:
+  hourchat-network:
+    driver: bridge

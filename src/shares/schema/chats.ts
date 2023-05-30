@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { z } from 'zod';
 
 export const privateMessageSchema = z.object({
@@ -25,12 +26,17 @@ export const groupMessageTypingSchema = z.object({
 });
 
 export const createGroupMessageSchema = z.object({
-  members: z.set(z.number()).min(2),
+  members: z
+    .array(z.number())
+    .min(2)
+    .refine((members) => _.uniq(members).length >= 2, {
+      message: 'Array must contain at least 2 unique element(s)',
+    }),
   name: z.string(),
 });
 
 export const removeFromGroupSchema = z.object({
-  members: z.union([z.number(), z.set(z.number()).min(1)]),
+  members: z.union([z.number(), z.array(z.number()).min(1)]),
   senderId: z.number(),
   uuid: z.string(),
 });
