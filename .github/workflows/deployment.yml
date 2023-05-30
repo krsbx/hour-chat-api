@@ -1,0 +1,87 @@
+name: deployment
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  cleanup:
+    name: 'Prepare server for deployment'
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: clean up data
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          script: |
+            rm -rf ~/hour-chat-api/release.zip
+
+  build:
+    name: 'Build backend assets'
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    needs: cleanup
+    steps:
+      - name: checkout main
+        uses: actions/checkout@v3
+        with:
+          ref: main
+
+      - name: install node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: install depedencies
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: install
+
+      - name: build backend
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: build
+
+      - name: compress artifact
+        run: zip release.zip ./dist -r
+
+      - name: upload to server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          source: ./release.zip
+          target: '~/hour-chat-api'
+
+  deploy:
+    name: 'Deploy to Productions'
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: deploy
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          script: |
+            export NVM_DIR=~/.nvm
+            source ~/.nvm/nvm.sh
+            node --version
+            pwd
+            pm2 stop api && pm2 reset api
+            cd hour-chat-api && git fetch && git reset --hard origin/main
+            [ -d ~/hour-chat-api/dist/public ] && echo "copying ~/hour-chat-api/dist/public ..." && mv ~/hour-chat-api/dist/public ~/hour-chat-api/public
+            rm -rf ~/hour-chat-api/dist && echo "dist directory removed."
+            yarn install
+            yarn migrate
+            unzip -o ~/hour-chat-api/release.zip -d ~/hour-chat-api
+            [ -d ~/hour-chat-api/public ] && echo "restoring ~/hour-chat-api/public ..." && mv ~/hour-chat-api/public ~/hour-chat-api/dist/public
+            cd ~
+            pm2 start api
