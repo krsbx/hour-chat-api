@@ -22,6 +22,11 @@ function init(sequelize: Sequelize, DataTypes: typeof DT) {
         foreignKey: 'userId',
         as: 'deviceToken',
       });
+
+      User.hasMany(models['email-otps'], {
+        foreignKey: 'userId',
+        as: 'emailOtp',
+      });
     }
   }
 
@@ -64,6 +69,10 @@ function init(sequelize: Sequelize, DataTypes: typeof DT) {
       password: {
         allowNull: false,
         type: DataTypes.STRING,
+      },
+      isEmailVerified: {
+        defaultValue: false,
+        type: DataTypes.BOOLEAN,
       },
       createdAt: {
         allowNull: false,

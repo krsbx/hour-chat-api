@@ -1,3 +1,3 @@
-import init from '../components/device-tokens/models/DeviceToken';
+import { init } from '../components/device-tokens/models';
 
 export default init;
