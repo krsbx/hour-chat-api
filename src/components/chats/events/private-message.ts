@@ -42,14 +42,11 @@ function createSenderReceiverPath(
 export async function sendPrivateMessage(
   payload: z.infer<(typeof schema.chats)['privateMessageSchema']>
 ) {
-  const { body, senderId } = payload;
+  const { body, senderId, receiverId } = payload;
   const { receiverObj, senderObj } = createSenderReceiverPath(payload);
 
   const timestamp = Timestamp.now();
 
-  const informationData = {
-    timestamp,
-  };
   const messageData = {
     senderId,
     timestamp,
@@ -59,12 +56,18 @@ export async function sendPrivateMessage(
   const { firestore } = Firebase.instance;
 
   return Promise.all([
-    firestore
-      .doc(senderObj.informationPath)
-      .set(informationData, { merge: true }),
-    firestore
-      .doc(receiverObj.informationPath)
-      .set(informationData, { merge: true }),
+    firestore.doc(senderObj.basePath).set(
+      {
+        [receiverId]: messageData,
+      },
+      { merge: true }
+    ),
+    firestore.doc(receiverObj.basePath).set(
+      {
+        [senderId]: messageData,
+      },
+      { merge: true }
+    ),
     firestore.collection(senderObj.messagePath).add(messageData),
     firestore.collection(receiverObj.messagePath).add(messageData),
   ]);

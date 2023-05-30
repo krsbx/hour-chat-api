@@ -42,7 +42,7 @@ export async function createGroupMessageGroup(
   const timestamp = Timestamp.now();
 
   const informationData = {
-    members,
+    members: _.uniq(members),
     timestamp,
     name,
   };
@@ -52,12 +52,24 @@ export async function createGroupMessageGroup(
   const docRef = await firestore
     .collection(`${basePath}/${admin}/groups`)
     .add(informationData);
+  const uuid = docRef.id;
 
   return Promise.all(
-    _.map(members, (member) =>
-      firestore
-        .doc(`${basePath}/${member}/groups/${docRef.id}`)
-        .set(informationData, { merge: true })
+    _.map(_.uniq(members), (member) =>
+      Promise.all([
+        firestore.doc(`${basePath}/${member}`).set(
+          {
+            [uuid]: {
+              uuid,
+              name,
+            },
+          },
+          { merge: true }
+        ),
+        firestore
+          .doc(`${basePath}/${member}/groups/${uuid}`)
+          .set(informationData, { merge: true }),
+      ])
     )
   );
 }
@@ -88,11 +100,18 @@ export async function sendGroupMessage(
 
   return Promise.all(
     _.map(group?.members ?? [], (member) => {
-      const groupPath = `${basePath}/${member}/groups/${uuid}`;
+      const baseMemberPath = `${basePath}/${member}`;
+      const groupPath = `${baseMemberPath}/groups/${uuid}`;
 
       return Promise.all([
         firestore.collection(`${groupPath}/messages`).add(messageData),
         firestore.doc(groupPath).set(informationData, { merge: true }),
+        firestore.doc(baseMemberPath).set(
+          {
+            [uuid]: messageData,
+          },
+          { merge: true }
+        ),
       ]);
     })
   );
