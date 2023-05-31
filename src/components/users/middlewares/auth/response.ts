@@ -1,7 +1,7 @@
 import { createCodeStatus } from '@krsbx/response-formatter';
 import asyncMw from 'express-asyncmw';
 
-export const returnUserAccessTokenMw = asyncMw<{
+export const returnUserTokenMw = asyncMw<{
   extends: {
     token: string;
   };
