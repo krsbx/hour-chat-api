@@ -6,7 +6,7 @@ dotenvConfig();
 
 const jwtSecret = _.get(process.env, 'JWT_SECRET', '');
 
-export function signAccessToken<TPayload extends NonNullable<unknown>>(
+export function signJwtToken<TPayload extends NonNullable<unknown>>(
   payload: TPayload,
   always = false
 ) {
@@ -17,7 +17,7 @@ export function signAccessToken<TPayload extends NonNullable<unknown>>(
   return jwtToken.sign(payload, jwtSecret, options);
 }
 
-export function verifyAccessToken<
+export function verifyJwtToken<
   TResult extends NonNullable<unknown> = NonNullable<unknown>
 >(token: string) {
   return new Promise<TResult & jwtToken.JwtPayload>(function (resolve, reject) {

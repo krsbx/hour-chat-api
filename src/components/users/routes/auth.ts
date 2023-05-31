@@ -3,21 +3,22 @@ import middlewares from '../middlewares';
 
 const router = Router();
 
-// /auth/login
+// POST /auth/login
 router.post(
   '/login',
   middlewares.auth.common.validateUserLoginPayloadMw,
   middlewares.auth.read.getUserByPayloadMw,
   middlewares.auth.common.createUserAccessTokenMw,
-  middlewares.auth.response.returnUserAccessTokenMw
+  middlewares.auth.response.returnUserTokenMw
 );
 
-// /auth/register
+// POST /auth/register
 router.post(
   '/register',
   middlewares.users.common.validateCreateUserPayloadMw,
   middlewares.users.create.createUserMw,
-  middlewares.users.response.returnUserMw
+  middlewares.auth.common.createUserEmailTokenMw,
+  middlewares.auth.response.returnUserTokenMw
 );
 
 export default router;
