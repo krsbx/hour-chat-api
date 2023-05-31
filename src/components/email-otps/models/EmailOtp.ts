@@ -5,6 +5,8 @@ import {
   EmailOtpAttribute,
   EmailOtpModel,
 } from './attributes';
+import factory from '../../../shares/factory';
+import postFactory from './postFactory';
 import EmailOtpFactory from './EmailOtpFactory';
 
 export default (sequelize: Sequelize, DataTypes: typeof DT) => {
@@ -63,7 +65,10 @@ export default (sequelize: Sequelize, DataTypes: typeof DT) => {
     }
   );
 
-  EmailOtpFactory.init(EmailOtpFactory as never);
+  const factored = factory(EmailOtp);
+  postFactory(factored as never);
+
+  EmailOtpFactory.init(factored as never);
 
   return EmailOtp as unknown as EmailOtpModel;
 };
