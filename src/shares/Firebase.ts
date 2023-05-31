@@ -73,6 +73,16 @@ class Firebase {
     await batch.commit();
   }
 
+  public async sendEmail(payload: {
+    to: string;
+    message: {
+      subject: string;
+      html: string;
+    };
+  }) {
+    return this.firestore.collection('mail').add(payload);
+  }
+
   public getRemoteConfig() {
     return this.remoteConfig.getTemplate();
   }
