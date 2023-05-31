@@ -1,5 +1,8 @@
 import { Model, ModelStatic } from 'sequelize';
 import { CreateOptional } from '../../../types/utils';
+import factory from '../../../shares/factory';
+// eslint-disable-next-line import/no-cycle
+import postFactory from './postFactory';
 
 export type EmailOtpAttribute = {
   id: number;
@@ -20,4 +23,9 @@ export type BaseEmailOtpModel = Model<
   CreateEmailOtpAttribute
 >;
 
-export type EmailOtpModel = ModelStatic<BaseEmailOtpModel>;
+export type EmailOtpModel = ModelStatic<BaseEmailOtpModel> & {
+  factory: ReturnType<
+    typeof factory<EmailOtpAttribute, CreateEmailOtpAttribute>
+  >['factory'] &
+    ReturnType<typeof postFactory>;
+};
