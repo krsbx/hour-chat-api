@@ -1,5 +1,6 @@
 import { config as dotenvConfig } from 'dotenv';
 import _ from 'lodash';
+import { Worker } from 'worker_threads';
 import { ENV_NAMES } from './constant';
 
 dotenvConfig();
@@ -48,4 +49,19 @@ export function validateEnv() {
   const field = fields.join(', ');
 
   throw Error(`Please update the env in fields : ${field}`);
+}
+
+export function runWorker<T>(str: string, workerData: unknown | null = null) {
+  return new Promise<T>((resolve, reject) => {
+    const worker = new Worker(str, {
+      workerData,
+    });
+
+    worker.on('message', resolve);
+    worker.on('error', reject);
+    worker.on('exit', (code) => {
+      if (code !== 0)
+        reject(new Error(`Worker stopped with exit code ${code}`));
+    });
+  });
 }
