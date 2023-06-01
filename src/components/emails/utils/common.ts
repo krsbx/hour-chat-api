@@ -14,5 +14,3 @@ export function createTransport() {
 
   return transporter;
 }
-
-createTransport();
