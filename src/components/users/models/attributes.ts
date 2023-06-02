@@ -13,6 +13,8 @@ export type UserAttribute = {
   phoneNumber: string;
   password: string;
   isEmailVerified: boolean;
+  gender: string;
+  dob: string | Date;
   createdAt: Date;
   updatedAt: Date;
 };
@@ -25,6 +27,8 @@ export type CreateUserAttribute = CreateOptional<
   | 'createdAt'
   | 'updatedAt'
   | 'isEmailVerified'
+  | 'gender'
+  | 'dob'
 >;
 
 export type BaseUserModel = Model<UserAttribute, CreateUserAttribute>;
