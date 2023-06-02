@@ -51,13 +51,17 @@ export function validateEnv() {
   throw Error(`Please update the env in fields : ${field}`);
 }
 
-export function runWorker<T>(str: string, workerData: unknown | null = null) {
+export function runWorker<T>(
+  str: string,
+  workerData: unknown,
+  callback?: ((result: T) => void) | ((result: T) => Promise<void>)
+): Promise<T> {
   return new Promise<T>((resolve, reject) => {
     const worker = new Worker(str, {
       workerData,
     });
 
-    worker.on('message', resolve);
+    worker.on('message', callback ?? resolve);
     worker.on('error', reject);
     worker.on('exit', (code) => {
       if (code !== 0)
