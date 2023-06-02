@@ -41,7 +41,7 @@ export function validateEnv() {
 
       return prev;
     },
-    [] as unknown[]
+    [] as string[]
   );
 
   if (!fields.length) return;

@@ -75,13 +75,14 @@ jobs:
             source ~/.nvm/nvm.sh
             node --version
             pwd
-            pm2 stop api && pm2 reset api
+            pm2 stop all && pm2 reset all
             cd hour-chat-api && git fetch && git reset --hard origin/main
             [ -d ~/hour-chat-api/dist/public ] && echo "copying ~/hour-chat-api/dist/public ..." && mv ~/hour-chat-api/dist/public ~/hour-chat-api/public
             rm -rf ~/hour-chat-api/dist && echo "dist directory removed."
             unzip -o ~/hour-chat-api/release.zip -d ~/hour-chat-api
             yarn install
             yarn migrate
+            yarn migrate:dev
             [ -d ~/hour-chat-api/public ] && echo "restoring ~/hour-chat-api/public ..." && mv ~/hour-chat-api/public ~/hour-chat-api/dist/public
             cd ~
-            pm2 start api
+            pm2 start all

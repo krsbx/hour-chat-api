@@ -1,12 +1,10 @@
 import { z } from 'zod';
-import { config as dotEnvConfig } from 'dotenv';
 import { FieldValue, Timestamp } from 'firebase-admin/firestore';
 import schema from '../../../shares/schema';
 import Firebase from '../../../shares/Firebase';
+import ENVIRONMENT from '../../../config/environment';
 
-dotEnvConfig();
-
-const chatBasePath = process.env.CHAT_BASE_PATH;
+const chatBasePath = ENVIRONMENT.CHAT_BASE_PATH;
 
 function createSenderReceiverPath(
   payload: Omit<z.infer<(typeof schema.chats)['privateMessageSchema']>, 'body'>

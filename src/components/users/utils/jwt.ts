@@ -1,10 +1,7 @@
-import { config as dotenvConfig } from 'dotenv';
 import jwtToken from 'jsonwebtoken';
-import _ from 'lodash';
+import ENVIRONMENT from '../../../config/environment';
 
-dotenvConfig();
-
-const jwtSecret = _.get(process.env, 'JWT_SECRET', '');
+const jwtSecret = ENVIRONMENT.JWT_SECRET;
 
 export function signJwtToken<TPayload extends NonNullable<unknown>>(
   payload: TPayload,

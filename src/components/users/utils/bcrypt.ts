@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
-import _ from 'lodash';
+import ENVIRONMENT from '../../../config/environment';
 
-const SALT_ROUND = _.toNumber(_.get(process.env, 'SALT'));
+const SALT_ROUND = +ENVIRONMENT.SALT_ROUND;
 
 export async function hashText(text: string) {
   const salt = await bcrypt.genSalt(SALT_ROUND);
