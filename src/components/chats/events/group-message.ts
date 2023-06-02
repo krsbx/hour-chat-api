@@ -1,13 +1,11 @@
 import { z } from 'zod';
 import _ from 'lodash';
-import { config as dotEnvConfig } from 'dotenv';
 import { FieldValue, Timestamp } from 'firebase-admin/firestore';
 import schema from '../../../shares/schema';
 import Firebase from '../../../shares/Firebase';
+import ENVIRONMENT from '../../../config/environment';
 
-dotEnvConfig();
-
-const chatBasePath = process.env.CHAT_BASE_PATH;
+const chatBasePath = ENVIRONMENT.CHAT_BASE_PATH;
 
 function isUserInGroup(
   payload: { members: number[] } | undefined,

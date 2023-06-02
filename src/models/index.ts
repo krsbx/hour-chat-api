@@ -4,9 +4,10 @@ import { Sequelize, DataTypes } from 'sequelize';
 import process from 'process';
 import { Database } from 'sequelize-db-type/helper';
 import appRootPath from 'app-root-path';
+import { ENVIRONMENT_TYPE } from '../shares/constant';
 
 const basename = path.basename(__filename);
-const env = process.env.NODE_ENV || 'development';
+const env = process.env.NODE_ENV || ENVIRONMENT_TYPE.DEVELOPMENT;
 const config = require(path.resolve(appRootPath.path, 'dist/config/config.js'))[
   env
 ];
