@@ -19,6 +19,5 @@ const ENVIRONMENT = _.reduce(
   },
   {} as Record<keyof (typeof ENVIRONMENT_NAME)[typeof env], string>
 );
-console.log(ENVIRONMENT);
 
 export default ENVIRONMENT;
