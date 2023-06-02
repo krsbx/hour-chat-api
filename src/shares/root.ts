@@ -10,7 +10,7 @@ const root = (app: Express) => {
   app.use(cors());
 
   app.get('*', queryParserMw);
-  app.use('/api', routes);
+  app.use('/', routes);
 
   app.use(errorHandlerMw);
 };
