@@ -21,3 +21,9 @@ export const ENV_NAMES = [
   'EMAIL_USER',
   'EMAIL_PASSWORD',
 ];
+
+export const GENDER = {
+  MALE: 'male',
+  FEMALE: 'female',
+  OTHER: 'other',
+} as const;

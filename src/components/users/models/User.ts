@@ -4,6 +4,7 @@ import factory from '../../../shares/factory';
 import { CreateUserAttribute, UserAttribute, UserModel } from './attributes';
 import UserFactory from './UserFactory';
 import postFactory from './postFactory';
+import { GENDER } from '../../../shares/constant';
 
 function init(sequelize: Sequelize, DataTypes: typeof DT) {
   class User extends Model<UserAttribute, CreateUserAttribute> {
@@ -73,6 +74,15 @@ function init(sequelize: Sequelize, DataTypes: typeof DT) {
       isEmailVerified: {
         defaultValue: false,
         type: DataTypes.BOOLEAN,
+      },
+      gender: {
+        defaultValue: GENDER.OTHER,
+        type: DataTypes.STRING,
+      },
+      dob: {
+        allowNull: true,
+        defaultValue: null,
+        type: DataTypes.DATE,
       },
       createdAt: {
         allowNull: false,

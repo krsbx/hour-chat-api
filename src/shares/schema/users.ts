@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import validator from 'validator';
+import { GENDER } from '../constant';
 
 export const createUserSchema = z
   .object({
@@ -11,6 +12,12 @@ export const createUserSchema = z
     phoneNumber: z.string().refine(validator.isMobilePhone),
     password: z.string().min(5),
     confirmPassword: z.string().min(5),
+    dob: z.date().optional().nullable().default(null),
+    gender: z
+      .enum([GENDER.MALE, GENDER.FEMALE, GENDER.OTHER])
+      .optional()
+      .nullable()
+      .default(GENDER.OTHER),
   })
   .superRefine(({ confirmPassword, password }, ctx) => {
     if (confirmPassword !== password) {
