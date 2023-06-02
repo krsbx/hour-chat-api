@@ -39,6 +39,8 @@ export const updateUserSchema = z
     phoneNumber: z.string().refine(validator.isMobilePhone).optional(),
     password: z.string().min(5).optional(),
     confirmPassword: z.string().min(5).optional(),
+    dob: z.date().optional(),
+    gender: z.enum([GENDER.MALE, GENDER.FEMALE, GENDER.OTHER]).optional(),
   })
   .superRefine(({ confirmPassword, password }, ctx) => {
     if (password && confirmPassword && confirmPassword !== password) {
