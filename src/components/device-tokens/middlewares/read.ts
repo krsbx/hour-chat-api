@@ -19,7 +19,7 @@ export const getDeviceTokenMw = asyncMw<{
 
   if (!deviceToken) {
     return res
-      .json(400)
+      .status(400)
       .json(
         createNotFoundResponse(`User device token with id ${req.params.userId}`)
       );
