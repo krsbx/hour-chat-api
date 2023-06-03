@@ -14,7 +14,7 @@ export const deleteUserMw = asyncMw<{
     },
   });
 
-  return res.json(200).json({
+  return res.status(200).json({
     ...createCodeStatus(200),
     message: 'Your account has been deleted successfully',
   });
