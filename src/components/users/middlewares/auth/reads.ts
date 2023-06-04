@@ -1,13 +1,20 @@
 import _ from 'lodash';
 import asyncMw from 'express-asyncmw';
 import { z } from 'zod';
-import { createNotFoundResponse } from '@krsbx/response-formatter';
+import {
+  createBadRequestResponse,
+  createNotFoundResponse,
+} from '@krsbx/response-formatter';
 import schema from '../../../../shares/schema';
 import User from '../../models';
 import { BaseUserModel } from '../../models/attributes';
+import { compareText } from '../../utils/bcrypt';
 
 export const getUserByPayloadMw = asyncMw<{
   reqBody: z.infer<(typeof schema.auth)['loginUserSchema']>;
+  extends: {
+    user: BaseUserModel;
+  };
 }>(async (req, res, next) => {
   let user: BaseUserModel | null = null;
 
@@ -35,6 +42,26 @@ export const getUserByPayloadMw = asyncMw<{
   }
 
   req.user = user;
+
+  return next();
+});
+
+export const comparePasswordMw = asyncMw<{
+  reqBody: z.infer<(typeof schema.auth)['loginUserSchema']>;
+  extends: {
+    user: BaseUserModel;
+  };
+}>(async (req, res, next) => {
+  const isCorrect = await compareText({
+    original: req.user.dataValues.password,
+    text: req.body.password,
+  });
+
+  if (!isCorrect) {
+    return res
+      .status(400)
+      .json(createBadRequestResponse(`Password doesn't match`));
+  }
 
   return next();
 });
