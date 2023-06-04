@@ -9,7 +9,7 @@ import { signJwtToken, verifyJwtToken } from '../../utils/jwt';
 export const validateUserLoginPayloadMw = asyncMw<{
   reqBody: z.infer<(typeof schema.auth)['loginUserSchema']>;
 }>(async (req, res, next) => {
-  await schema.auth.loginUserSchema.parseAsync(req.body);
+  req.body = await schema.auth.loginUserSchema.parseAsync(req.body);
 
   return next();
 });

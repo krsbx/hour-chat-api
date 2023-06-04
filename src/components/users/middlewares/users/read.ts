@@ -22,7 +22,7 @@ export const getUserMw = asyncMw<{
 
   if (!user) {
     return res
-      .status(400)
+      .status(404)
       .json(createNotFoundResponse(`User with id ${req.params.id}`));
   }
 
