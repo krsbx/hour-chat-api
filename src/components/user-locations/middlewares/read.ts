@@ -19,7 +19,7 @@ export const getUserLocationMw = asyncMw<{
 
   if (!userLocation) {
     return res
-      .status(400)
+      .status(404)
       .json(
         createNotFoundResponse(`User location with userId ${req.params.userId}`)
       );

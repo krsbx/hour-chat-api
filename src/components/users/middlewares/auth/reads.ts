@@ -23,7 +23,7 @@ export const getUserByPayloadMw = asyncMw<{
 
   if (!user) {
     return res
-      .status(400)
+      .status(404)
       .json(
         createNotFoundResponse(
           `User with ${_.compact([
