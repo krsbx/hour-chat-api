@@ -8,6 +8,7 @@ router.post(
   '/login',
   middlewares.auth.common.validateUserLoginPayloadMw,
   middlewares.auth.read.getUserByPayloadMw,
+  middlewares.auth.read.comparePasswordMw,
   middlewares.auth.common.createUserAccessTokenMw,
   middlewares.auth.response.returnUserTokenMw
 );
