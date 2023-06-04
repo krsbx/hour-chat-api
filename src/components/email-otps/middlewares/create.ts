@@ -13,7 +13,7 @@ dotenvConfig();
 
 export const createEmailOtpMw = asyncMw<{
   extends: {
-    user: Pick<UserAttribute, 'id' | 'email' | 'isEmailVerified'>;
+    currentUser: Pick<UserAttribute, 'id' | 'email' | 'isEmailVerified'>;
     emailOtp: BaseEmailOtpModel | null;
   };
 }>(async (req, res, next) => {
@@ -25,7 +25,7 @@ export const createEmailOtpMw = asyncMw<{
     const [emailOtp, email] = await Promise.all([
       EmailOtp.instance.create(
         {
-          userId: req.user.id,
+          userId: req.currentUser.id,
           validUntil: moment().add(1, 'hour').toDate(),
           code,
         },
@@ -33,7 +33,7 @@ export const createEmailOtpMw = asyncMw<{
       ),
       Email.instance.create({
         content: `Please enter ${code} on the Hour Chat App to validate your account!`,
-        receiver: req.user.email,
+        receiver: req.currentUser.email,
         sender: 'Hour Chat <noreply@hour-chat.com>',
         subject: 'Email Verification',
       }),

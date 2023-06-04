@@ -7,16 +7,16 @@ import User from '../../users/models';
 
 export const getEmailOtpMw = asyncMw<{
   extends: {
-    user: Pick<UserAttribute, 'id' | 'email' | 'isEmailVerified'>;
+    currentUser: Pick<UserAttribute, 'id' | 'email' | 'isEmailVerified'>;
     emailOtp: BaseEmailOtpModel | null;
   };
 }>(async (req, res, next) => {
-  if (req.user.isEmailVerified)
+  if (req.currentUser.isEmailVerified)
     return res.status(400).json(createBadRequestResponse());
 
   const emailOtp = await EmailOtp.instance.findOne({
     where: {
-      userId: req.user.id,
+      userId: req.currentUser.id,
     },
   });
 
@@ -27,17 +27,19 @@ export const getEmailOtpMw = asyncMw<{
 
 export const getUserMw = asyncMw<{
   extends: {
-    user: Pick<UserAttribute, 'id' | 'email' | 'isEmailVerified'>;
+    currentUser: Pick<UserAttribute, 'id' | 'email' | 'isEmailVerified'>;
   };
 }>(async (req, res, next) => {
   const user = await User.instance.findOne({
     where: {
-      id: req.user.id,
+      id: req.currentUser.id,
     },
   });
 
   if (!user || user.dataValues.isEmailVerified)
     return res.status(400).json(createBadRequestResponse());
+
+  req.currentUser = user.dataValues;
 
   return next();
 });
