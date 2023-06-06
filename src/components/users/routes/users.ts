@@ -28,7 +28,7 @@ router.get(
 );
 
 // GET /users/:id
-router.post(
+router.get(
   '/:id',
   middlewares.auth.common.validateUserAccessTokenMw,
   middlewares.auth.common.validateUserAccessMw,
