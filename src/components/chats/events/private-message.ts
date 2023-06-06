@@ -56,13 +56,19 @@ export async function sendPrivateMessage(
   return Promise.all([
     firestore.doc(senderObj.basePath).set(
       {
-        [receiverId]: messageData,
+        [receiverId]: {
+          ...messageData,
+          uuid: senderId,
+        },
       },
       { merge: true }
     ),
     firestore.doc(receiverObj.basePath).set(
       {
-        [senderId]: messageData,
+        [senderId]: {
+          ...messageData,
+          uuid: receiverId,
+        },
       },
       { merge: true }
     ),
