@@ -17,7 +17,7 @@ export function signJwtToken<TPayload extends NonNullable<unknown>>(
 export function verifyJwtToken<
   TResult extends NonNullable<unknown> = NonNullable<unknown>
 >(token: string) {
-  return new Promise<TResult & jwtToken.JwtPayload>((resolve, reject) => {
+  return new Promise<TResult & jwtToken.JwtPayload>(function (resolve, reject) {
     jwtToken.verify(token, jwtSecret, (err, decoded) => {
       if (err) {
         reject(err);
