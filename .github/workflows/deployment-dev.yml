@@ -2,7 +2,7 @@ name: deployment
 
 on:
   push:
-    branches: [main]
+    branches: [development]
 
 jobs:
   cleanup:
@@ -17,7 +17,7 @@ jobs:
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
           script: |
-            rm -rf ~/hour-chat-api/release.zip
+            rm -rf ~/hour-chat-api-dev/release.zip
 
   build:
     name: 'Build backend assets'
@@ -55,7 +55,7 @@ jobs:
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
           source: ./release.zip
-          target: '~/hour-chat-api'
+          target: '~/hour-chat-api-dev'
 
   deploy:
     name: 'Deploy to Productions'
@@ -75,14 +75,13 @@ jobs:
             source ~/.nvm/nvm.sh
             node --version
             pwd
-            pm2 stop all && pm2 reset all
-            cd hour-chat-api && git fetch && git reset --hard origin/main
-            [ -d ~/hour-chat-api/dist/public ] && echo "copying ~/hour-chat-api/dist/public ..." && mv ~/hour-chat-api/dist/public ~/hour-chat-api/public
-            rm -rf ~/hour-chat-api/dist && echo "dist directory removed."
-            unzip -o ~/hour-chat-api/release.zip -d ~/hour-chat-api
+            pm2 stop api-dev && pm2 reset api-dev
+            cd hour-chat-api-dev && git fetch && git reset --hard origin/main
+            [ -d ~/hour-chat-api-dev/dist/public ] && echo "copying ~/hour-chat-api-dev/dist/public ..." && mv ~/hour-chat-api-dev/dist/public ~/hour-chat-api-dev/public
+            rm -rf ~/hour-chat-api-dev/dist && echo "dist directory removed."
+            unzip -o ~/hour-chat-api-dev/release.zip -d ~/hour-chat-api-dev
             yarn install
-            yarn migrate
             yarn migrate:dev
-            [ -d ~/hour-chat-api/public ] && echo "restoring ~/hour-chat-api/public ..." && mv ~/hour-chat-api/public ~/hour-chat-api/dist/public
+            [ -d ~/hour-chat-api-dev/public ] && echo "restoring ~/hour-chat-api-dev/public ..." && mv ~/hour-chat-api-dev/public ~/hour-chat-api-dev/dist/public
             cd ~
-            pm2 start all
+            pm2 start api-dev

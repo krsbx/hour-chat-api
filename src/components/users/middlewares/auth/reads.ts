@@ -16,17 +16,14 @@ export const getUserByPayloadMw = asyncMw<{
     user: BaseUserModel;
   };
 }>(async (req, res, next) => {
-  let user: BaseUserModel | null = null;
+  const isEmail = !_.isEmpty(req.body.email);
+  const fieldName = isEmail ? 'email' : 'username';
 
-  if (req.body.email) {
-    user = await User.instance.findOne({ where: { email: req.body.email } });
-  }
-
-  if (req.body.username && !user) {
-    user = await User.instance.findOne({
-      where: { username: req.body.username },
-    });
-  }
+  const user = await User.instance.findOne({
+    where: {
+      [fieldName]: req.body[fieldName],
+    },
+  });
 
   if (!user) {
     return res
