@@ -13,7 +13,7 @@ function postFactory(factoryModel: EmailModel) {
     return omit(resource, ['createdAt', 'updatedAt']) as TResource;
   }
 
-  async function resourceToModel<TResource extends NonNullable<unknown>>(
+  async function resourceToModel<TResource extends UnknownObject>(
     resource: TResource | EmailAttribute
   ) {
     const model = _.pick(resource, [

@@ -14,7 +14,7 @@ function postFactory(factoryModel: UserModel) {
     return omit(resource, ['password', 'updatedAt']) as TResource;
   }
 
-  async function resourceToModel<TResource extends NonNullable<unknown>>(
+  async function resourceToModel<TResource extends UnknownObject>(
     resource: TResource | UserAttribute
   ) {
     const model = _.pick(resource, [

@@ -1,7 +1,10 @@
 import { config as dotenvConfig } from 'dotenv';
 import _ from 'lodash';
 import { Worker } from 'worker_threads';
+import { BuildOptions, CreationAttributes } from 'sequelize';
+import db from '../models';
 import { ENV_NAMES } from './constant';
+import { MODEL_NAME } from './models';
 
 dotenvConfig();
 
@@ -9,17 +12,17 @@ export function castTo<T>(obj: unknown) {
   return obj as T;
 }
 
-export function omit<
-  TObj extends NonNullable<unknown>,
-  TKey extends keyof TObj
->(obj: TObj, key: TKey[]) {
+export function omit<TObj extends UnknownObject, TKey extends keyof TObj>(
+  obj: TObj,
+  key: TKey[]
+) {
   return _.omit(obj, key);
 }
 
-export function pick<
-  TObj extends NonNullable<unknown>,
-  TKey extends keyof TObj
->(obj: TObj, key: TKey[]) {
+export function pick<TObj extends UnknownObject, TKey extends keyof TObj>(
+  obj: TObj,
+  key: TKey[]
+) {
   return _.pick(obj, key);
 }
 
@@ -68,4 +71,17 @@ export function runWorker<T>(
         reject(new Error(`Worker stopped with exit code ${code}`));
     });
   });
+}
+
+export function buildModel<
+  T extends ValueOf<typeof MODEL_NAME>,
+  U extends HourChat.Models.ModelStatic[T],
+  V extends HourChat.Models.BaseModel[T]
+>(modelName: T, attribute?: CreationAttributes<V>, options?: BuildOptions) {
+  const model = db[modelName] as unknown as U;
+
+  return (model as unknown as UnknownStaticModel).build(
+    attribute,
+    options
+  ) as V;
 }

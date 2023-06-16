@@ -3,8 +3,8 @@ import _ from 'lodash';
 import { Attributes, FindOptions, Model, ModelStatic, Op } from 'sequelize';
 
 function factory<
-  TModelAttributes extends NonNullable<unknown>,
-  TCreationAttributes extends NonNullable<unknown>,
+  TModelAttributes extends UnknownObject,
+  TCreationAttributes extends UnknownObject,
   TModel extends Model<TModelAttributes, TCreationAttributes> = Model<
     TModelAttributes,
     TCreationAttributes
@@ -16,11 +16,11 @@ function factory<
   type TReturn = TModelStatic & {
     factory: {
       findAll: typeof findAll;
-      modelToResource: <TResource extends NonNullable<unknown>>(
+      modelToResource: <TResource extends UnknownObject>(
         // eslint-disable-next-line no-shadow
         model: TModel
       ) => Promise<TResource>;
-      resourceToModel: <TResource extends NonNullable<unknown>>(
+      resourceToModel: <TResource extends UnknownObject>(
         resource: TResource
       ) => Promise<TCreationAttributes>;
     };

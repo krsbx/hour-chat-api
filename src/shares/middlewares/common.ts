@@ -11,7 +11,7 @@ export const queryParserMw = asyncMw<{
     filters?: string;
   };
   extends: {
-    filterQueryParams: NonNullable<unknown>;
+    filterQueryParams: UnknownObject;
   };
 }>(async (req, res, next) => {
   req.filterQueryParams = req.query.filters
