@@ -3,7 +3,7 @@ import ENVIRONMENT from '../../../config/environment';
 
 const jwtSecret = ENVIRONMENT.JWT_SECRET;
 
-export function signJwtToken<TPayload extends NonNullable<unknown>>(
+export function signJwtToken<TPayload extends UnknownObject>(
   payload: TPayload,
   always = false
 ) {
@@ -14,9 +14,9 @@ export function signJwtToken<TPayload extends NonNullable<unknown>>(
   return jwtToken.sign(payload, jwtSecret, options);
 }
 
-export function verifyJwtToken<
-  TResult extends NonNullable<unknown> = NonNullable<unknown>
->(token: string) {
+export function verifyJwtToken<TResult extends UnknownObject = UnknownObject>(
+  token: string
+) {
   return new Promise<TResult & jwtToken.JwtPayload>(function (resolve, reject) {
     jwtToken.verify(token, jwtSecret, (err, decoded) => {
       if (err) {
