@@ -4,6 +4,7 @@ import userLocationRoutes from '../components/user-locations/routes';
 import chatRoutes from '../components/chats/routes';
 import emailOtpRoutes from '../components/email-otps/routes';
 import deviceTokenRoutes from '../components/device-tokens/routes';
+import storyRoutes from '../components/stories/routes';
 
 const router = Router();
 
@@ -13,5 +14,6 @@ router.use('/user-locations', userLocationRoutes);
 router.use('/chats', chatRoutes);
 router.use('/device-tokens', deviceTokenRoutes);
 router.use('/email-otps', emailOtpRoutes);
+router.use('/stories', storyRoutes);
 
 export default router;

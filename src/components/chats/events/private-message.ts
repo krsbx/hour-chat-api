@@ -45,7 +45,7 @@ export async function sendPrivateMessage(
 
   const timestamp = Timestamp.now();
 
-  const messageData = {
+  const messageData: HourChat.Firestore.MessageData = {
     senderId,
     timestamp,
     body,

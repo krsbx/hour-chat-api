@@ -3,5 +3,6 @@ import * as deviceTokens from './device-tokens';
 import * as userLocations from './user-locations';
 import * as users from './users';
 import * as chats from './chats';
+import * as stories from './stories';
 
-export default { auth, chats, users, userLocations, deviceTokens };
+export default { auth, chats, users, userLocations, deviceTokens, stories };
