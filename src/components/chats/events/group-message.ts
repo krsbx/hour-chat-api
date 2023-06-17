@@ -8,12 +8,12 @@ import ENVIRONMENT from '../../../config/environment';
 const chatBasePath = ENVIRONMENT.CHAT_BASE_PATH;
 
 function isUserInGroup(
-  payload: { members: number[] } | undefined,
+  payload: HourChat.Firestore.GroupMetadata | undefined,
   senderId: number
 ) {
-  if (!payload?.members?.length) return false;
+  if (!(payload?.members as number[])?.length) return false;
 
-  return _.includes(payload.members, senderId);
+  return _.includes((payload?.members ?? []) as number[], senderId);
 }
 
 async function getGroupInformation(groupPath: string) {
@@ -23,7 +23,7 @@ async function getGroupInformation(groupPath: string) {
   if (!group.exists) return;
 
   const groupData = group.data() as
-    | { members: number[]; timestamp: Timestamp }
+    | HourChat.Firestore.GroupMetadata
     | undefined;
 
   return groupData;
@@ -39,7 +39,7 @@ export async function createGroupMessageGroup(
   const basePath = `${chatBasePath}/groups/users`;
   const timestamp = Timestamp.now();
 
-  const informationData = {
+  const informationData: Partial<HourChat.Firestore.GroupMetadata> = {
     members: _.uniq(members),
     timestamp,
     name,
@@ -80,10 +80,10 @@ export async function sendGroupMessage(
   const basePath = `${chatBasePath}/groups/users`;
   const timestamp = Timestamp.now();
 
-  const informationData = {
+  const informationData: Partial<HourChat.Firestore.Metadata> = {
     timestamp,
   };
-  const messageData = {
+  const messageData: HourChat.Firestore.MessageData = {
     senderId,
     body,
     timestamp,
@@ -125,7 +125,7 @@ export async function updateGroupMessageTyping(
 
   const basePath = `${chatBasePath}/groups/users`;
 
-  const informationData = {
+  const informationData: Partial<HourChat.Firestore.Metadata> = {
     typing,
   };
 
@@ -154,7 +154,7 @@ export async function removeFromGroup(
   ) as number[];
   const basePath = `${chatBasePath}/groups/users`;
 
-  const informationData = {
+  const informationData: Partial<HourChat.Firestore.Metadata> = {
     members: FieldValue.arrayRemove(...members),
   };
 
