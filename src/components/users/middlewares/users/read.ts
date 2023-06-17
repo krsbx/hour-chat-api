@@ -4,7 +4,7 @@ import { createNotFoundResponse } from '@krsbx/response-formatter';
 import User from '../../models';
 import { BaseUserModel, UserAttribute } from '../../models/attributes';
 import UserLocation from '../../../user-locations/models';
-import { UserLocationModel } from '../../../user-locations/models/attributes';
+import { BaseUserLocationModel } from '../../../user-locations/models/attributes';
 
 export const getUserMw = asyncMw<{
   params: {
@@ -53,7 +53,7 @@ export const getUsersMw = asyncMw<{
 export const getNearMeUsersMw = asyncMw<{
   extends: {
     users: {
-      rows: BaseUserModel[];
+      rows: BaseUserLocationModel[];
       count: number;
     };
     currentUser: Omit<UserAttribute, 'password'>;
@@ -103,9 +103,7 @@ export const getNearMeUsersMw = asyncMw<{
 
   req.users = {
     count: users.count,
-    rows: (
-      users.rows as unknown as (UserLocationModel & { user: BaseUserModel })[]
-    ).map(({ user }) => user),
+    rows: users.rows,
   };
 
   return next();

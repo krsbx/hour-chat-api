@@ -24,7 +24,7 @@ router.get(
   '/near-me',
   middlewares.auth.common.validateUserAccessTokenMw,
   middlewares.users.read.getNearMeUsersMw,
-  middlewares.users.response.returnUsersMw
+  middlewares.users.response.returnNearMeUsersMw
 );
 
 // GET /users/:id
