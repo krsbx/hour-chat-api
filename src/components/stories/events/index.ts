@@ -1,56 +1,37 @@
-import { z } from 'zod';
-import { FieldValue, Timestamp } from 'firebase-admin/firestore';
-import schema from '../../../shares/schema';
+import { FieldValue } from 'firebase-admin/firestore';
 import Firebase from '../../../shares/Firebase';
 import ENVIRONMENT from '../../../config/environment';
+import { StoryAttribute } from '../models/attributes';
+import { omit } from '../../../shares/common';
 
 const storyBasePath = ENVIRONMENT.STORY_BASE_PATH;
 
-export function createUserStory(
-  payload: z.infer<(typeof schema.stories)['createStorySchema']> & {
-    userId: number;
-  }
-) {
-  const timestamp = Timestamp.now();
-
+export function createUserStory(payload: StoryAttribute) {
   const storyData: HourChat.Firestore.BaseStory = {
-    ...payload,
+    ...omit(payload, ['id']),
     likes: [] as number[],
     dislikes: [] as number[],
-    timestamp,
   };
 
   const { firestore } = Firebase.instance;
 
-  return firestore.collection(`${storyBasePath}/story/users`).add(storyData);
+  return firestore
+    .doc(`${storyBasePath}/story/users/${payload.id}`)
+    .create(storyData);
 }
 
-export function updateUserStory(
-  uuid: string,
-  payload: Partial<z.infer<(typeof schema.stories)['createStorySchema']>>
-) {
+export function updateUserStory(id: string, payload: Partial<StoryAttribute>) {
   const { firestore } = Firebase.instance;
 
-  return firestore.doc(`${storyBasePath}/story/users/${uuid}`).set(payload, {
+  return firestore.doc(`${storyBasePath}/story/users/${id}`).set(payload, {
     merge: true,
   });
 }
 
-export async function getUserStoryByuuid(uuid: string) {
-  const doc = await Firebase.instance.firestore
-    .doc(`${storyBasePath}/story/users/${uuid}`)
-    .get();
-  const data = doc.data() as HourChat.Firestore.BaseStory | undefined;
-
-  if (!data) return;
-
-  return data;
-}
-
-export function likeUserStory(uuid: string, userId: number) {
+export function likeUserStory(id: string, userId: number) {
   const { firestore } = Firebase.instance;
 
-  return firestore.doc(`${storyBasePath}/story/users/${uuid}`).set(
+  return firestore.doc(`${storyBasePath}/story/users/${id}`).set(
     {
       likes: FieldValue.arrayUnion(userId),
       dislikes: FieldValue.arrayRemove(userId),
@@ -61,10 +42,10 @@ export function likeUserStory(uuid: string, userId: number) {
   );
 }
 
-export function dislikeUserStory(uuid: string, userId: number) {
+export function dislikeUserStory(id: string, userId: number) {
   const { firestore } = Firebase.instance;
 
-  return firestore.doc(`${storyBasePath}/story/users/${uuid}`).set(
+  return firestore.doc(`${storyBasePath}/story/users/${id}`).set(
     {
       likes: FieldValue.arrayRemove(userId),
       dislikes: FieldValue.arrayUnion(userId),
@@ -75,8 +56,8 @@ export function dislikeUserStory(uuid: string, userId: number) {
   );
 }
 
-export function deleteUserStory(uuid: string) {
+export function deleteUserStory(id: string) {
   const { firestore } = Firebase.instance;
 
-  return firestore.doc(`${storyBasePath}/story/users/${uuid}`).delete();
+  return firestore.doc(`${storyBasePath}/story/users/${id}`).delete();
 }

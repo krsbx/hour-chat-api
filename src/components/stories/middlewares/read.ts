@@ -1,16 +1,21 @@
 import asyncMw from 'express-asyncmw';
 import { createNotFoundResponse } from '@krsbx/response-formatter';
-import * as events from '../events';
+import Story from '../models';
+import { BaseStoryModel } from '../models/attributes';
 
-export const getStoryByUuidMw = asyncMw<{
+export const getStoryByStoryIdMw = asyncMw<{
   params: {
-    uuid: string;
+    storyId: string;
   };
   extends: {
-    story: HourChat.Firestore.BaseStory;
+    story: BaseStoryModel;
   };
 }>(async (req, res, next) => {
-  const story = await events.getUserStoryByuuid(req.params.uuid);
+  const story = await Story.instance.findOne({
+    where: {
+      id: req.params.storyId,
+    },
+  });
 
   if (!story) {
     return res.status(404).json(createNotFoundResponse('Story'));

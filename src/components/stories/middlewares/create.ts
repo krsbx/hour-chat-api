@@ -4,6 +4,8 @@ import { createCodeStatus } from '@krsbx/response-formatter';
 import schema from '../../../shares/schema';
 import { UserAttribute } from '../../users/models/attributes';
 import * as events from '../events';
+import db from '../../../models';
+import Story from '../models';
 
 export const createStoryMw = asyncMw<{
   reqBody: z.infer<(typeof schema.stories)['createStorySchema']>;
@@ -11,9 +13,19 @@ export const createStoryMw = asyncMw<{
     currentUser: Omit<UserAttribute, 'password'>;
   };
 }>(async (req, res) => {
-  await events.createUserStory({
-    ...req.body,
-    userId: req.currentUser.id,
+  await db.sequelize.transaction(async (tx) => {
+    const payload = {
+      ...req.body,
+      userId: req.currentUser.id,
+    };
+
+    const story = await Story.instance.create(payload, {
+      transaction: tx,
+    });
+
+    await events.createUserStory(story.dataValues);
+
+    return story;
   });
 
   return res.status(200).json({

@@ -11,7 +11,8 @@ export type BaseStory = {
   userId: number;
   dislikes: number[];
   likes: number[];
-  timestamp: Timestamp;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 export type MessageData = {
