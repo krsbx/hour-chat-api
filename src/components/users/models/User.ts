@@ -21,12 +21,17 @@ function init(sequelize: Sequelize, DataTypes: typeof DT) {
 
       User.hasMany(models['device-tokens'], {
         foreignKey: 'userId',
-        as: 'deviceToken',
+        as: 'deviceTokens',
       });
 
       User.hasMany(models['email-otps'], {
         foreignKey: 'userId',
-        as: 'emailOtp',
+        as: 'emailOtps',
+      });
+
+      User.hasMany(models.stories, {
+        foreignKey: 'userId',
+        as: 'stories',
       });
     }
   }

@@ -12,28 +12,28 @@ router.post(
   middlewares.create.createStoryMw
 );
 
-// POST /stories/:uuid/like
+// POST /stories/:storyId/like
 router.post(
-  '/:uuid/like',
+  '/:storyId/like',
   userMiddlewares.auth.common.validateUserAccessTokenMw,
-  middlewares.read.getStoryByUuidMw,
+  middlewares.read.getStoryByStoryIdMw,
   middlewares.update.likeStoryMw
 );
 
-// POST /stories/:uuid/dislike
+// POST /stories/:storyId/dislike
 router.post(
-  '/:uuid/dislike',
+  '/:storyId/dislike',
   userMiddlewares.auth.common.validateUserAccessTokenMw,
-  middlewares.read.getStoryByUuidMw,
+  middlewares.read.getStoryByStoryIdMw,
   middlewares.update.dislikeStoryMw
 );
 
-// PATCH /stories/:uuid
+// PATCH /stories/:storyId
 router.patch(
-  '/:uuid',
+  '/:storyId',
   userMiddlewares.auth.common.validateUserAccessTokenMw,
   middlewares.common.validateStoryPayloadMw,
-  middlewares.read.getStoryByUuidMw,
+  middlewares.read.getStoryByStoryIdMw,
   middlewares.common.validateUserAccessMw,
   middlewares.update.updateStoryMw
 );
@@ -42,7 +42,7 @@ router.patch(
 router.delete(
   '/:uid',
   userMiddlewares.auth.common.validateUserAccessTokenMw,
-  middlewares.read.getStoryByUuidMw,
+  middlewares.read.getStoryByStoryIdMw,
   middlewares.common.validateUserAccessMw,
   middlewares.delete.deleteStoryMw
 );
