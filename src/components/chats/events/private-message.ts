@@ -3,9 +3,6 @@ import { FieldValue, Timestamp } from 'firebase-admin/firestore';
 import schema from '../../../shares/schema';
 import Firebase from '../../../shares/Firebase';
 import ENVIRONMENT from '../../../config/environment';
-import { createOrUseEncryption } from '../../encryptions/events';
-import { CHAT_TYPE } from '../../../shares/constant';
-import { encryptText } from '../../encryptions/utils/common';
 
 const chatBasePath = ENVIRONMENT.CHAT_BASE_PATH;
 
@@ -46,20 +43,12 @@ export async function sendPrivateMessage(
   const { body, senderId, receiverId } = payload;
   const { receiverObj, senderObj } = createSenderReceiverPath(payload);
 
-  const encryptionPayload = {
-    receiverId,
-    senderId,
-    type: CHAT_TYPE.PRIVATE,
-  };
-
-  const encryption = await createOrUseEncryption(encryptionPayload);
-
   const timestamp = Timestamp.now();
 
   const messageData: HourChat.Firestore.MessageData = {
     senderId,
     timestamp,
-    body: encryptText(body, encryption.dataValues),
+    body,
   };
 
   const { firestore } = Firebase.instance;
