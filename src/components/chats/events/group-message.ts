@@ -4,6 +4,9 @@ import { FieldValue, Timestamp } from 'firebase-admin/firestore';
 import schema from '../../../shares/schema';
 import Firebase from '../../../shares/Firebase';
 import ENVIRONMENT from '../../../config/environment';
+import { createOrUseEncryption } from '../../encryptions/events';
+import { CHAT_TYPE } from '../../../shares/constant';
+import { encryptText } from '../../encryptions/utils/common';
 
 const chatBasePath = ENVIRONMENT.CHAT_BASE_PATH;
 
@@ -52,6 +55,12 @@ export async function createGroupMessageGroup(
     .add(informationData);
   const uuid = docRef.id;
 
+  await createOrUseEncryption({
+    receiverId: uuid,
+    senderId: uuid,
+    type: CHAT_TYPE.GROUP,
+  });
+
   return Promise.all(
     _.map(_.uniq(members), (member) =>
       Promise.all([
@@ -77,6 +86,14 @@ export async function sendGroupMessage(
 ) {
   const { body, senderId, uuid } = payload;
 
+  const encryptionPayload = {
+    receiverId: uuid,
+    senderId: uuid,
+    type: CHAT_TYPE.PRIVATE,
+  };
+
+  const encryption = await createOrUseEncryption(encryptionPayload);
+
   const basePath = `${chatBasePath}/groups/users`;
   const timestamp = Timestamp.now();
 
@@ -87,7 +104,7 @@ export async function sendGroupMessage(
   const messageData: HourChat.Firestore.MessageData = {
     senderId,
     timestamp,
-    body,
+    body: encryptText(body, encryption.dataValues),
   };
 
   const { firestore } = Firebase.instance;
