@@ -5,6 +5,7 @@ import chatRoutes from '../components/chats/routes';
 import emailOtpRoutes from '../components/email-otps/routes';
 import deviceTokenRoutes from '../components/device-tokens/routes';
 import storyRoutes from '../components/stories/routes';
+import encryptionRoutes from '../components/encryptions/routes';
 
 const router = Router();
 
@@ -15,5 +16,6 @@ router.use('/chats', chatRoutes);
 router.use('/device-tokens', deviceTokenRoutes);
 router.use('/email-otps', emailOtpRoutes);
 router.use('/stories', storyRoutes);
+router.use('/encryptions', encryptionRoutes);
 
 export default router;
