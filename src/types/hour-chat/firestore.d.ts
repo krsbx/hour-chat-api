@@ -16,7 +16,7 @@ export type BaseStory = {
 };
 
 export type MessageData = {
-  senderId: number;
+  senderId: string;
   timestamp: Timestamp;
   body: string;
 };
@@ -28,16 +28,16 @@ export type PrivateMetadata = MessageData & {
 export type GroupMetadata = MessageData & {
   name: string;
   uuid: string;
-  members: number[] | FieldValue;
+  members: string[] | FieldValue;
 };
 
 export type Metadata =
   | {
-      typing: number[] | FieldValue;
+      typing: string[] | FieldValue;
       timestamp: Timestamp;
     }
   | {
-      members: number[] | FieldValue;
+      members: string[] | FieldValue;
       timestamp: Timestamp;
-      typing: number[] | FieldValue;
+      typing: string[] | FieldValue;
     };

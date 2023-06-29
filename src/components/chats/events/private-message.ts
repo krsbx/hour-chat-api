@@ -70,6 +70,7 @@ export async function sendPrivateMessage(
         [receiverId]: {
           ...messageData,
           uuid: senderId,
+          total: FieldValue.increment(1),
         },
       },
       { merge: true }
