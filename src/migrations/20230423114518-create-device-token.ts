@@ -5,9 +5,10 @@ export default {
     await queryInterface.createTable('device-tokens', {
       id: {
         allowNull: false,
-        autoIncrement: true,
+        autoIncrement: false,
         primaryKey: true,
-        type: Sequelize.INTEGER,
+        defaultValue: Sequelize.UUIDV4,
+        type: Sequelize.UUID,
       },
       userId: {
         unique: true,
@@ -17,10 +18,9 @@ export default {
           key: 'id',
         },
         onDelete: 'CASCADE',
-        type: Sequelize.INTEGER,
+        type: Sequelize.UUID,
       },
       token: {
-        unique: false,
         allowNull: true,
         defaultValue: null,
         type: Sequel.STRING,

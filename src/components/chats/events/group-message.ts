@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import _ from 'lodash';
+import { v4 as uuidv4 } from 'uuid';
 import { FieldValue, Timestamp } from 'firebase-admin/firestore';
 import schema from '../../../shares/schema';
 import Firebase from '../../../shares/Firebase';
@@ -37,8 +38,7 @@ export async function createGroupMessageGroup(
 ) {
   const { members, name } = payload;
 
-  const admin = [...members].shift() as number;
-
+  const uuid = uuidv4();
   const basePath = `${chatBasePath}/groups/users`;
   const timestamp = Timestamp.now();
 
@@ -49,11 +49,6 @@ export async function createGroupMessageGroup(
   };
 
   const { firestore } = Firebase.instance;
-
-  const docRef = await firestore
-    .collection(`${basePath}/${admin}/groups`)
-    .add(informationData);
-  const uuid = docRef.id;
 
   await createOrUseEncryption({
     receiverId: uuid,

@@ -5,8 +5,8 @@ import factory from '../../../shares/factory';
 import postFactory from './postFactory';
 
 export type UserLocationAttribute = {
-  id: number;
-  userId: number;
+  id: string;
+  userId: string;
   location: GeoJsons['Point'];
   createdAt: Date;
   updatedAt: Date;

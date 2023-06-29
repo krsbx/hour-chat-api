@@ -24,9 +24,10 @@ function init(sequelize: Sequelize, DataTypes: typeof DT) {
     {
       id: {
         allowNull: false,
-        autoIncrement: true,
+        autoIncrement: false,
         primaryKey: true,
-        type: DataTypes.INTEGER,
+        defaultValue: DataTypes.UUIDV4,
+        type: DataTypes.UUID,
       },
       receiverId: {
         allowNull: false,

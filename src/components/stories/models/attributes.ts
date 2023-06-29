@@ -4,7 +4,7 @@ import factory from '../../../shares/factory';
 import postFactory from './postFactory';
 
 export type StoryAttribute = {
-  id: number;
+  id: string;
   body?: string;
   file?: {
     uri: string;
@@ -12,7 +12,7 @@ export type StoryAttribute = {
     width?: number;
     height?: number;
   };
-  userId: number;
+  userId: string;
   createdAt: Date;
   updatedAt: Date;
 };

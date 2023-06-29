@@ -5,9 +5,10 @@ export default {
     await queryInterface.createTable('stories', {
       id: {
         allowNull: false,
-        autoIncrement: true,
+        autoIncrement: false,
         primaryKey: true,
-        type: Sequelize.INTEGER,
+        defaultValue: Sequelize.UUIDV4,
+        type: Sequelize.UUID,
       },
       body: {
         allowNull: true,
@@ -25,7 +26,7 @@ export default {
           key: 'id',
         },
         onDelete: 'CASCADE',
-        type: Sequelize.INTEGER,
+        type: Sequelize.UUID,
       },
       createdAt: {
         allowNull: false,

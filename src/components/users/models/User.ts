@@ -40,9 +40,10 @@ function init(sequelize: Sequelize, DataTypes: typeof DT) {
     {
       id: {
         allowNull: false,
-        autoIncrement: true,
+        autoIncrement: false,
         primaryKey: true,
-        type: DataTypes.INTEGER,
+        defaultValue: DataTypes.UUIDV4,
+        type: DataTypes.UUID,
       },
       firstName: {
         allowNull: false,
@@ -59,26 +60,22 @@ function init(sequelize: Sequelize, DataTypes: typeof DT) {
       },
       username: {
         unique: true,
-        allowNull: false,
+        allowNull: true,
         type: DataTypes.STRING,
       },
       email: {
         unique: true,
-        allowNull: false,
+        allowNull: true,
         type: DataTypes.STRING,
       },
       phoneNumber: {
         unique: true,
-        allowNull: false,
+        allowNull: true,
         type: DataTypes.STRING,
       },
       password: {
         allowNull: false,
         type: DataTypes.STRING,
-      },
-      isEmailVerified: {
-        defaultValue: false,
-        type: DataTypes.BOOLEAN,
       },
       gender: {
         defaultValue: GENDER.OTHER,
@@ -88,6 +85,10 @@ function init(sequelize: Sequelize, DataTypes: typeof DT) {
         allowNull: true,
         defaultValue: null,
         type: DataTypes.DATE,
+      },
+      isEmailVerified: {
+        defaultValue: false,
+        type: DataTypes.BOOLEAN,
       },
       createdAt: {
         allowNull: false,

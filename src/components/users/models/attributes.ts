@@ -4,7 +4,7 @@ import factory from '../../../shares/factory';
 import postFactory from './postFactory';
 
 export type UserAttribute = {
-  id: number;
+  id: string;
   firstName: string;
   middleName: string;
   lastName: string;

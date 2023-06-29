@@ -5,9 +5,10 @@ export default {
     await queryInterface.createTable('encryptions', {
       id: {
         allowNull: false,
-        autoIncrement: true,
+        autoIncrement: false,
         primaryKey: true,
-        type: Sequelize.INTEGER,
+        defaultValue: Sequelize.UUIDV4,
+        type: Sequelize.UUID,
       },
       receiverId: {
         allowNull: false,

@@ -73,7 +73,7 @@ export const validateUserAccessMw = asyncMw<{
     currentUser: Omit<UserAttribute, 'password'>;
   };
 }>(async (req, res, next) => {
-  if (req.currentUser.id !== +req.params.id)
+  if (req.currentUser.id !== req.params.id)
     return res.status(401).json(createUnauthorizedResponse());
 
   return next();
@@ -87,7 +87,7 @@ export const validateUserAccessByUserIdMw = asyncMw<{
     currentUser: Omit<UserAttribute, 'password'>;
   };
 }>(async (req, res, next) => {
-  if (req.currentUser.id !== +req.params.userId)
+  if (req.currentUser.id !== req.params.userId)
     return res.status(401).json(createUnauthorizedResponse());
 
   return next();

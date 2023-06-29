@@ -14,7 +14,7 @@ export const createDeviceTokenMw = asyncMw<{
   };
 }>(async (req, res, next) => {
   const [deviceToken] = await DeviceToken.instance.upsert({
-    userId: +req.params.userId,
+    userId: req.params.userId,
     token: req.body.token,
   });
 

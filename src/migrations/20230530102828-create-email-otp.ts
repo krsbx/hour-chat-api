@@ -5,9 +5,10 @@ export default {
     await queryInterface.createTable('email-otps', {
       id: {
         allowNull: false,
-        autoIncrement: true,
+        autoIncrement: false,
         primaryKey: true,
-        type: Sequelize.INTEGER,
+        defaultValue: Sequelize.UUIDV4,
+        type: Sequelize.UUID,
       },
       userId: {
         allowNull: false,
@@ -16,7 +17,7 @@ export default {
           key: 'id',
         },
         onDelete: 'CASCADE',
-        type: Sequelize.INTEGER,
+        type: Sequelize.UUID,
       },
       code: {
         allowNull: false,

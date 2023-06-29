@@ -1,13 +1,15 @@
 import Sequel, { QueryInterface } from 'sequelize';
+import { GENDER } from '../shares/constant';
 
 export default {
   async up(queryInterface: QueryInterface, Sequelize: typeof Sequel) {
     await queryInterface.createTable('users', {
       id: {
         allowNull: false,
-        autoIncrement: true,
+        autoIncrement: false,
         primaryKey: true,
-        type: Sequelize.INTEGER,
+        defaultValue: Sequelize.UUIDV4,
+        type: Sequelize.UUID,
       },
       firstName: {
         allowNull: false,
@@ -24,22 +26,35 @@ export default {
       },
       username: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: true,
         unique: true,
       },
       email: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: true,
         unique: true,
       },
       phoneNumber: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: true,
         unique: true,
       },
       password: {
         type: Sequelize.STRING,
         allowNull: false,
+      },
+      gender: {
+        defaultValue: GENDER.OTHER,
+        type: Sequelize.STRING,
+      },
+      dob: {
+        allowNull: true,
+        defaultValue: null,
+        type: Sequelize.DATE,
+      },
+      isEmailVerified: {
+        defaultValue: false,
+        type: Sequelize.BOOLEAN,
       },
       createdAt: {
         allowNull: false,

@@ -1,7 +1,7 @@
 import { Model, ModelStatic } from 'sequelize';
 
 export type EncryptionAttribute = {
-  id: number;
+  id: string;
   receiverId: string;
   senderId: string;
   type: HourChat.Types.ChatType;
