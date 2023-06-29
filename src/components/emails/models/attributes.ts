@@ -4,7 +4,7 @@ import factory from '../../../shares/factory';
 import postFactory from './postFactory';
 
 export type EmailAttribute = {
-  id: number;
+  id: string;
   sender: string;
   receiver: string;
   subject: string;

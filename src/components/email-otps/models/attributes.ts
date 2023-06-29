@@ -4,8 +4,8 @@ import factory from '../../../shares/factory';
 import postFactory from './postFactory';
 
 export type EmailOtpAttribute = {
-  id: number;
-  userId: number;
+  id: string;
+  userId: string;
   code: string;
   validUntil: Date;
   createdAt: Date;

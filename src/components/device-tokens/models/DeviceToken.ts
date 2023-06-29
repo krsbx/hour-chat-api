@@ -32,9 +32,10 @@ function init(sequelize: Sequelize, DataTypes: typeof DT) {
     {
       id: {
         allowNull: false,
-        autoIncrement: true,
+        autoIncrement: false,
         primaryKey: true,
-        type: DataTypes.INTEGER,
+        defaultValue: DataTypes.UUIDV4,
+        type: DataTypes.UUID,
       },
       userId: {
         unique: true,
@@ -44,10 +45,9 @@ function init(sequelize: Sequelize, DataTypes: typeof DT) {
           key: 'id',
         },
         onDelete: 'CASCADE',
-        type: DataTypes.INTEGER,
+        type: DataTypes.UUID,
       },
       token: {
-        unique: false,
         allowNull: true,
         defaultValue: null,
         type: DataTypes.STRING,

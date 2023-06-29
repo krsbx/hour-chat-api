@@ -8,9 +8,9 @@ export type BaseStory = {
     width?: number;
     height?: number;
   };
-  userId: number;
-  dislikes: number[];
-  likes: number[];
+  userId: string;
+  dislikes: string[];
+  likes: string[];
   createdAt: Date;
   updatedAt: Date;
 };

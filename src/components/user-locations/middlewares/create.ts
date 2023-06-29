@@ -16,7 +16,7 @@ export const createUserLocationMw = asyncMw<{
   const { lat, lng } = req.body;
 
   const [userLocation] = await UserLocation.instance.upsert({
-    userId: +req.params.userId,
+    userId: req.params.userId,
     location: {
       type: 'Point',
       coordinates: [lng, lat],

@@ -9,6 +9,7 @@ class Firebase {
   private _firebase: admin.app.App;
   private _firestore: admin.firestore.Firestore;
   private _remoteConfig: admin.remoteConfig.RemoteConfig;
+  private _storage: admin.storage.Storage;
   private _encryptionConfig: HourChat.Encryption.EncryptionConfig;
 
   constructor() {
@@ -19,6 +20,7 @@ class Firebase {
     });
     this._firestore = this.firebase.firestore();
     this._remoteConfig = this.firebase.remoteConfig();
+    this._storage = this.firebase.storage();
     this._encryptionConfig = {};
   }
 

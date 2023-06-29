@@ -5,9 +5,10 @@ export default {
     await queryInterface.createTable('emails', {
       id: {
         allowNull: false,
-        autoIncrement: true,
+        autoIncrement: false,
         primaryKey: true,
-        type: Sequelize.INTEGER,
+        defaultValue: Sequelize.UUIDV4,
+        type: Sequelize.UUID,
       },
       sender: {
         allowNull: false,

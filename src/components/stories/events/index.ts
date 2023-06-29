@@ -9,8 +9,8 @@ const storyBasePath = ENVIRONMENT.STORY_BASE_PATH;
 export function createUserStory(payload: StoryAttribute) {
   const storyData: HourChat.Firestore.BaseStory = {
     ...omit(payload, ['id']),
-    likes: [] as number[],
-    dislikes: [] as number[],
+    likes: [] as string[],
+    dislikes: [] as string[],
   };
 
   const { firestore } = Firebase.instance;
@@ -28,7 +28,7 @@ export function updateUserStory(id: string, payload: Partial<StoryAttribute>) {
   });
 }
 
-export function likeUserStory(id: string, userId: number) {
+export function likeUserStory(id: string, userId: string) {
   const { firestore } = Firebase.instance;
 
   return firestore.doc(`${storyBasePath}/story/users/${id}`).set(
@@ -42,7 +42,7 @@ export function likeUserStory(id: string, userId: number) {
   );
 }
 
-export function dislikeUserStory(id: string, userId: number) {
+export function dislikeUserStory(id: string, userId: string) {
   const { firestore } = Firebase.instance;
 
   return firestore.doc(`${storyBasePath}/story/users/${id}`).set(

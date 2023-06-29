@@ -29,9 +29,10 @@ export default (sequelize: Sequelize, DataTypes: typeof DT) => {
     {
       id: {
         allowNull: false,
-        autoIncrement: true,
+        autoIncrement: false,
         primaryKey: true,
-        type: DataTypes.INTEGER,
+        defaultValue: DataTypes.UUIDV4,
+        type: DataTypes.UUID,
       },
       userId: {
         allowNull: false,
@@ -40,7 +41,7 @@ export default (sequelize: Sequelize, DataTypes: typeof DT) => {
           key: 'id',
         },
         onDelete: 'CASCADE',
-        type: DataTypes.INTEGER,
+        type: DataTypes.UUID,
       },
       code: {
         allowNull: false,

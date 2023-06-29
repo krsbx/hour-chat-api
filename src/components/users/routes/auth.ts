@@ -18,7 +18,7 @@ router.post(
   '/register',
   middlewares.users.common.validateCreateUserPayloadMw,
   middlewares.users.create.createUserMw,
-  middlewares.auth.common.createUserEmailTokenMw,
+  middlewares.auth.common.createUserAccessTokenMw,
   middlewares.auth.response.returnUserTokenMw
 );
 

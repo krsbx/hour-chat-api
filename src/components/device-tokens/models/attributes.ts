@@ -4,8 +4,8 @@ import factory from '../../../shares/factory';
 import postFactory from './postFactory';
 
 export type DeviceTokenAttribute = {
-  id: number;
-  userId: number;
+  id: string;
+  userId: string;
   token: string | null;
   createdAt: Date;
   updatedAt: Date;
