@@ -4,3 +4,9 @@ export type EncryptionConfig = {
     ENCRYPT_IV: number[];
   };
 };
+
+export type EncryptionPayload = {
+  senderId: string;
+  receiverId: string;
+  type: HourChat.Types.EncryptionType;
+};

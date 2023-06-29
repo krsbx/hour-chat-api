@@ -1,8 +1,12 @@
 import { z } from 'zod';
-import { CHAT_TYPE } from '../constant';
+import { ENCRYPTION_TYPE } from '../constant';
 
 export const encryptionQuery = z.object({
-  senderId: z.union([z.number(), z.string()]),
-  receiverId: z.union([z.number(), z.string()]),
-  type: z.enum([CHAT_TYPE.PRIVATE, CHAT_TYPE.GROUP]),
+  senderId: z.string(),
+  receiverId: z.string(),
+  type: z.enum([
+    ENCRYPTION_TYPE.PRIVATE,
+    ENCRYPTION_TYPE.GROUP,
+    ENCRYPTION_TYPE.STORY,
+  ]),
 });

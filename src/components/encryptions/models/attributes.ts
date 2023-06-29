@@ -4,7 +4,7 @@ export type EncryptionAttribute = {
   id: string;
   receiverId: string;
   senderId: string;
-  type: HourChat.Types.ChatType;
+  type: HourChat.Types.EncryptionType;
   key: number[];
   iv: number[];
   createdAt: Date;

@@ -1,3 +1,6 @@
+import fs from 'fs-extra';
+import path from 'path';
+import appRootPath from 'app-root-path';
 import { config as dotenvConfig } from 'dotenv';
 import _ from 'lodash';
 import { Worker } from 'worker_threads';
@@ -84,4 +87,12 @@ export function buildModel<
     attribute,
     options
   ) as V;
+}
+
+export async function prepareFileUpload() {
+  const dirs = await fs.readdir(appRootPath.path);
+
+  if (dirs.includes('tmp')) return;
+
+  return fs.mkdirp(path.join(appRootPath.path, 'tmp'));
 }

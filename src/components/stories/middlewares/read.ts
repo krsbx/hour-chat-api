@@ -18,7 +18,9 @@ export const getStoryByStoryIdMw = asyncMw<{
   });
 
   if (!story) {
-    return res.status(404).json(createNotFoundResponse('Story'));
+    return res
+      .status(404)
+      .json(createNotFoundResponse(`Story with id ${req.params.storyId}`));
   }
 
   req.story = story;
