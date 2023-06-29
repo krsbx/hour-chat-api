@@ -1,7 +1,10 @@
+import { config as dotenvConfig } from 'dotenv';
 import path from 'path';
 import admin from 'firebase-admin';
 import { Query } from 'firebase-admin/firestore';
 import { ASSETS_PATH } from './constant';
+
+dotenvConfig();
 
 class Firebase {
   // eslint-disable-next-line no-use-before-define
@@ -17,6 +20,7 @@ class Firebase {
       credential: admin.credential.cert(
         require(path.resolve(ASSETS_PATH, 'firebase-service-account.json'))
       ),
+      storageBucket: process.env.STORAGE_BUCKET,
     });
     this._firestore = this.firebase.firestore();
     this._remoteConfig = this.firebase.remoteConfig();
@@ -36,6 +40,10 @@ class Firebase {
 
   public get firestore() {
     return this._firestore;
+  }
+
+  public get storage() {
+    return this._storage;
   }
 
   public get remoteConfig() {

@@ -127,7 +127,11 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
-firebase-service-account.json
+assets/*
+!assets/.gitkeep
+
+tmp/*
+!tmp/.gitkeep
 
 # Test file regarding testing of a functions
 src/test.ts

@@ -9,6 +9,11 @@ export const CHAT_TYPE = {
   GROUP: 'group',
 } as const;
 
+export const ENCRYPTION_TYPE = {
+  ...CHAT_TYPE,
+  STORY: 'story',
+} as const;
+
 export const ENVIRONMENT_TYPE = {
   DEVELOPMENT: 'development',
   PRODUCTION: 'production',
@@ -72,4 +77,5 @@ export const ENV_NAMES = [
   'EMAIL_SERVICE',
   'EMAIL_USER',
   'EMAIL_PASSWORD',
+  'STORAGE_BUCKET',
 ];

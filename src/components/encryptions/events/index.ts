@@ -3,15 +3,7 @@ import Encryption from '../models';
 import { createKeyIv } from '../utils/common';
 
 export async function getEncryptionByType(
-  {
-    receiverId,
-    senderId,
-    type,
-  }: {
-    senderId: string | number;
-    receiverId: string | number;
-    type: HourChat.Types.ChatType;
-  },
+  { receiverId, senderId, type }: HourChat.Encryption.EncryptionPayload,
   transaction?: Transaction
 ) {
   const encryption = await Encryption.instance.findOne({
@@ -41,15 +33,7 @@ export async function getEncryptionByType(
 }
 
 export async function createEncryption(
-  {
-    receiverId,
-    senderId,
-    type,
-  }: {
-    senderId: string | number;
-    receiverId: string | number;
-    type: HourChat.Types.ChatType;
-  },
+  { receiverId, senderId, type }: HourChat.Encryption.EncryptionPayload,
   transaction?: Transaction
 ) {
   const { key, iv } = createKeyIv();
@@ -72,9 +56,9 @@ export async function createEncryption(
 
 export async function createOrUseEncryption(
   payload: {
-    senderId: string | number;
-    receiverId: string | number;
-    type: HourChat.Types.ChatType;
+    senderId: string;
+    receiverId: string;
+    type: HourChat.Types.EncryptionType;
   },
   transaction?: Transaction
 ) {
