@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { z } from 'zod';
 import asyncMw from 'express-asyncmw';
 import schema from '../../../../shares/schema';
@@ -11,6 +12,8 @@ export const updateUserMw = asyncMw<{
   };
 }>(async (req, res, next) => {
   const resource = await User.instance.factory.resourceToModel(req.body);
+
+  if (_.isEmpty(resource)) return next();
 
   const [, [user]] = await User.instance.update(resource, {
     returning: true,
