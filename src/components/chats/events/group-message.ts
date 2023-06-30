@@ -57,7 +57,7 @@ export async function createGroupMessageGroup(
 export async function sendGroupMessage(
   payload: z.infer<(typeof schema.chats)['groupMessageSchema']>
 ) {
-  const { body, senderId, uuid } = payload;
+  const { body, files, senderId, uuid } = payload;
 
   const basePath = `${chatBasePath}/groups/users`;
   const timestamp = Timestamp.now();
@@ -73,7 +73,8 @@ export async function sendGroupMessage(
   const messageData: HourChat.Firestore.MessageData = {
     senderId,
     timestamp,
-    body: encryptText(body, encryption.dataValues),
+    body: encryptText(body ?? '', encryption.dataValues),
+    files: files ?? [],
   };
 
   const { firestore } = Firebase.instance;

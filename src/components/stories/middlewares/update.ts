@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import asyncMw from 'express-asyncmw';
 import { z } from 'zod';
 import { createCodeStatus } from '@krsbx/response-formatter';
@@ -14,6 +15,8 @@ export const updateStoryMw = asyncMw<{
   reqBody: z.infer<(typeof schema.stories)['createStorySchema']>;
 }>(async (req, res) => {
   await db.sequelize.transaction(async (tx) => {
+    if (_.isEmpty(req.body)) return;
+
     const [, [story]] = await Story.instance.update(req.body, {
       where: {
         id: req.params.storyId,
