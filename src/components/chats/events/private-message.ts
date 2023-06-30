@@ -43,7 +43,7 @@ function createSenderReceiverPath(
 export async function sendPrivateMessage(
   payload: z.infer<(typeof schema.chats)['privateMessageSchema']>
 ) {
-  const { body, senderId, receiverId } = payload;
+  const { body, files, senderId, receiverId } = payload;
   const { receiverObj, senderObj } = createSenderReceiverPath(payload);
 
   const encryptionPayload = {
@@ -59,7 +59,8 @@ export async function sendPrivateMessage(
   const messageData: HourChat.Firestore.MessageData = {
     senderId,
     timestamp,
-    body: encryptText(body, encryption.dataValues),
+    body: encryptText(body ?? '', encryption.dataValues),
+    files: files ?? [],
   };
 
   const { firestore } = Firebase.instance;

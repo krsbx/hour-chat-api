@@ -19,6 +19,11 @@ export type MessageData = {
   senderId: string;
   timestamp: Timestamp;
   body: string;
+  files: {
+    uri: string;
+    name: string;
+    type?: string | null;
+  }[];
 };
 
 export type PrivateMetadata = MessageData & {
