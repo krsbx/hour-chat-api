@@ -5,13 +5,13 @@ import postFactory from './postFactory';
 
 export type StoryAttribute = {
   id: string;
-  body?: string;
-  file?: {
+  body: string | null;
+  file: {
     uri: string;
     type?: string | null;
     width?: number;
     height?: number;
-  };
+  } | null;
   userId: string;
   createdAt: Date;
   updatedAt: Date;

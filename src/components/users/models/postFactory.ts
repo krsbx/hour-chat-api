@@ -25,6 +25,7 @@ function postFactory(factoryModel: UserModel) {
       'email',
       'phoneNumber',
       'password',
+      'avatar',
     ]);
 
     if ((model as UserAttribute).password) {
