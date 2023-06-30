@@ -26,6 +26,7 @@ export const createUserSchema = z
       .optional()
       .nullable()
       .default(GENDER.OTHER),
+    avatar: z.string().optional(),
   })
   .superRefine(({ confirmPassword, password }, ctx) => {
     if (confirmPassword !== password) {
@@ -56,6 +57,7 @@ export const updateUserSchema = z
         return moment(date).isValid();
       }),
     gender: z.enum([GENDER.MALE, GENDER.FEMALE, GENDER.OTHER]).optional(),
+    avatar: z.string().optional(),
   })
   .superRefine(({ confirmPassword, password }, ctx) => {
     if (password && confirmPassword && confirmPassword !== password) {
