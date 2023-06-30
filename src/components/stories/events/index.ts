@@ -7,7 +7,7 @@ import { omit } from '../../../shares/common';
 const storyBasePath = ENVIRONMENT.STORY_BASE_PATH;
 
 export function createUserStory(payload: StoryAttribute) {
-  const storyData: HourChat.Firestore.BaseStory = {
+  const storyData = {
     ...omit(payload, ['id']),
     likes: [] as string[],
     dislikes: [] as string[],

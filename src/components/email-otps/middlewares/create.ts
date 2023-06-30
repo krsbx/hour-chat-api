@@ -33,7 +33,7 @@ export const createEmailOtpMw = asyncMw<{
       ),
       Email.instance.create({
         content: `Please enter ${code} on the Hour Chat App to validate your account!`,
-        receiver: req.currentUser.email,
+        receiver: `${req.currentUser.email}`,
         sender: 'Hour Chat <noreply@hour-chat.com>',
         subject: 'Email Verification',
       }),

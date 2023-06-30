@@ -7,7 +7,7 @@ import postFactory from './postFactory';
 export type UserLocationAttribute = {
   id: string;
   userId: string;
-  location: GeoJsons['Point'];
+  location: GeoJsons['Point'] | null;
   createdAt: Date;
   updatedAt: Date;
 };
@@ -16,7 +16,7 @@ export type CreateUserLocationAttribute = CreateOptional<
   UserLocationAttribute,
   'id' | 'createdAt' | 'updatedAt' | 'location'
 > & {
-  location: GeoJson;
+  location: GeoJson | null;
 };
 
 export type BaseUserLocationModel = Model<

@@ -65,7 +65,7 @@ export const getNearMeUsersMw = asyncMw<{
     },
   });
 
-  if (!userLocation) {
+  if (!userLocation || !userLocation.dataValues.location) {
     req.users = {
       count: 0,
       rows: [],

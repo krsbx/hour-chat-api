@@ -90,6 +90,11 @@ function init(sequelize: Sequelize, DataTypes: typeof DT) {
         defaultValue: false,
         type: DataTypes.BOOLEAN,
       },
+      avatar: {
+        allowNull: true,
+        defaultValue: null,
+        type: DataTypes.STRING,
+      },
       createdAt: {
         allowNull: false,
         type: DataTypes.DATE,
