@@ -10,6 +10,7 @@ router.get(
   userMiddlewares.auth.common.validateUserAccessTokenMw,
   middlewares.common.validateEncryptionQueryMw,
   middlewares.read.getEncryptionMw,
+  middlewares.common.checkUserAccessMw,
   middlewares.response.returnEncryptionMw
 );
 
