@@ -4,8 +4,11 @@ import { FieldValue, Timestamp } from 'firebase-admin/firestore';
 import schema from '../../../shares/schema';
 import Firebase from '../../../shares/Firebase';
 import ENVIRONMENT from '../../../config/environment';
-import { encryptText } from '../../encryptions/utils/common';
-import { getGroupEncryption, isUserInGroup } from '../utils/common';
+import {
+  encryptMessageMetadata,
+  getGroupEncryption,
+  isUserInGroup,
+} from '../utils/common';
 import db from '../../../models';
 import Group from '../../groups/models';
 
@@ -57,7 +60,7 @@ export async function createGroupMessageGroup(
 export async function sendGroupMessage(
   payload: z.infer<(typeof schema.chats)['groupMessageSchema']>
 ) {
-  const { body, files, senderId, uuid } = payload;
+  const { senderId, uuid } = payload;
 
   const basePath = `${chatBasePath}/groups/users`;
   const timestamp = Timestamp.now();
@@ -70,12 +73,14 @@ export async function sendGroupMessage(
 
   if (!group || !isUserInGroup(group, senderId)) return;
 
-  const messageData: HourChat.Firestore.MessageData = {
-    senderId,
-    timestamp,
-    body: encryptText(body ?? '', encryption.dataValues),
-    files: files ?? [],
-  };
+  const messageData = encryptMessageMetadata(
+    {
+      ..._.pick(payload, ['body', 'files']),
+      senderId,
+      timestamp,
+    },
+    encryption.dataValues
+  );
 
   const { firestore } = Firebase.instance;
 

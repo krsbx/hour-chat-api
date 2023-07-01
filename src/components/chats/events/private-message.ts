@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { z } from 'zod';
 import { FieldValue, Timestamp } from 'firebase-admin/firestore';
 import schema from '../../../shares/schema';
@@ -5,7 +6,7 @@ import Firebase from '../../../shares/Firebase';
 import ENVIRONMENT from '../../../config/environment';
 import { createOrUseEncryption } from '../../encryptions/events';
 import { CHAT_TYPE } from '../../../shares/constant';
-import { encryptText } from '../../encryptions/utils/common';
+import { encryptMessageMetadata } from '../utils/common';
 
 const chatBasePath = ENVIRONMENT.CHAT_BASE_PATH;
 
@@ -43,7 +44,7 @@ function createSenderReceiverPath(
 export async function sendPrivateMessage(
   payload: z.infer<(typeof schema.chats)['privateMessageSchema']>
 ) {
-  const { body, files, senderId, receiverId } = payload;
+  const { senderId, receiverId } = payload;
   const { receiverObj, senderObj } = createSenderReceiverPath(payload);
 
   const encryptionPayload = {
@@ -56,12 +57,14 @@ export async function sendPrivateMessage(
 
   const timestamp = Timestamp.now();
 
-  const messageData: HourChat.Firestore.MessageData = {
-    senderId,
-    timestamp,
-    body: encryptText(body ?? '', encryption.dataValues),
-    files: files ?? [],
-  };
+  const messageData = encryptMessageMetadata(
+    {
+      ..._.pick(payload, ['body', 'files']),
+      senderId,
+      timestamp,
+    },
+    encryption.dataValues
+  );
 
   const { firestore } = Firebase.instance;
 
@@ -81,6 +84,7 @@ export async function sendPrivateMessage(
         [senderId]: {
           ...messageData,
           uuid: receiverId,
+          total: FieldValue.increment(1),
         },
       },
       { merge: true }
