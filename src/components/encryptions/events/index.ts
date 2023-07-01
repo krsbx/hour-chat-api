@@ -12,12 +12,12 @@ export async function getEncryptionByType(
         {
           [Op.or]: [
             {
-              receiverId: `${receiverId}`,
-              senderId: `${senderId}`,
+              receiverId,
+              senderId,
             },
             {
-              senderId: `${receiverId}`,
-              receiverId: `${senderId}`,
+              senderId: receiverId,
+              receiverId: senderId,
             },
           ],
         },
