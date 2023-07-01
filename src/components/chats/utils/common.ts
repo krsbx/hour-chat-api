@@ -4,6 +4,8 @@ import db from '../../../models';
 import Group from '../../groups/models';
 import { createOrUseEncryption } from '../../encryptions/events';
 import { CHAT_TYPE } from '../../../shares/constant';
+import { EncryptionAttribute } from '../../encryptions/models/attributes';
+import { encryptText } from '../../encryptions/utils/common';
 
 export function isUserInGroup(payload: BaseGroupModel, senderId: string) {
   if (!payload) return false;
@@ -37,4 +39,20 @@ export async function getGroupEncryption(uuid: string) {
   });
 
   return [group, encryption] as const;
+}
+
+export function encryptMessageMetadata(
+  payload: CreateOptional<HourChat.Firestore.MessageData, 'body' | 'files'>,
+  config: EncryptionAttribute
+) {
+  const clone = {
+    ...payload,
+    body: encryptText(payload.body ?? '', config),
+    files: (payload.files ?? []).map((file) => ({
+      ...file,
+      uri: encryptText(file.uri, config),
+    })),
+  };
+
+  return clone;
 }
