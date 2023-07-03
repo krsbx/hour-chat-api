@@ -12,7 +12,7 @@ export const uploadMw = asyncMw(async (req, res, next) => {
   multer({
     storage: fileStorage,
     limits: {
-      fieldSize: convertSize('5 MB', 'B'),
+      fieldSize: convertSize('10 MB', 'B'),
     },
   }).array('file', 5)(req, res, next);
 });
