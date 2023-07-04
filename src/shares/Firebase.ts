@@ -3,6 +3,8 @@ import path from 'path';
 import admin from 'firebase-admin';
 import { Query } from 'firebase-admin/firestore';
 import { ASSETS_PATH } from './constant';
+import { UserAttribute } from '../components/users/models/attributes';
+import { omit } from './common';
 
 dotenvConfig();
 
@@ -56,6 +58,12 @@ class Firebase {
 
   private set encryptionConfig(value: HourChat.Encryption.EncryptionConfig) {
     this._encryptionConfig = value;
+  }
+
+  public createCustomSignInToken(value: UserAttribute) {
+    return this.firebase
+      .auth()
+      .createCustomToken(value.id, omit(value, ['password']));
   }
 
   public async deleteCollection(collectionPath: string) {

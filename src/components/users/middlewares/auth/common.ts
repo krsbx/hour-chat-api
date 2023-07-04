@@ -5,6 +5,7 @@ import schema from '../../../../shares/schema';
 import { omit, pick } from '../../../../shares/common';
 import { BaseUserModel, UserAttribute } from '../../models/attributes';
 import { signJwtToken, verifyJwtToken } from '../../utils/jwt';
+import Firebase from '../../../../shares/Firebase';
 
 export const validateUserLoginPayloadMw = asyncMw<{
   reqBody: z.infer<(typeof schema.auth)['loginUserSchema']>;
@@ -18,11 +19,16 @@ export const createUserAccessTokenMw = asyncMw<{
   extends: {
     user: BaseUserModel;
     token: string;
+    firebaseToken: string;
   };
 }>(async (req, res, next) => {
   const token = signJwtToken(omit(req.user.dataValues, ['password']), true);
+  const firebaseToken = await Firebase.instance.createCustomSignInToken(
+    req.user.dataValues
+  );
 
   req.token = token;
+  req.firebaseToken = firebaseToken;
 
   return next();
 });
