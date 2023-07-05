@@ -14,8 +14,8 @@ class Firebase {
   private _firebase: admin.app.App;
   private _firestore: admin.firestore.Firestore;
   private _remoteConfig: admin.remoteConfig.RemoteConfig;
+  private _messaging: admin.messaging.Messaging;
   private _storage: admin.storage.Storage;
-  private _encryptionConfig: HourChat.Encryption.EncryptionConfig;
 
   constructor() {
     this._firebase = admin.initializeApp({
@@ -27,7 +27,7 @@ class Firebase {
     this._firestore = this.firebase.firestore();
     this._remoteConfig = this.firebase.remoteConfig();
     this._storage = this.firebase.storage();
-    this._encryptionConfig = {};
+    this._messaging = this.firebase.messaging();
   }
 
   public static get instance() {
@@ -52,12 +52,8 @@ class Firebase {
     return this._remoteConfig;
   }
 
-  public get encryptionConfig() {
-    return this._encryptionConfig;
-  }
-
-  private set encryptionConfig(value: HourChat.Encryption.EncryptionConfig) {
-    this._encryptionConfig = value;
+  public get messaging() {
+    return this._messaging;
   }
 
   public createCustomSignInToken(value: UserAttribute) {
@@ -91,36 +87,26 @@ class Firebase {
     await batch.commit();
   }
 
-  public async sendEmail(payload: {
-    to: string;
-    message: {
-      subject: string;
-      html: string;
-    };
-  }) {
-    return this.firestore.collection('mail').add(payload);
+  public async sendNotification(token: string, payload: unknown) {
+    return this.messaging.send({
+      token,
+      data: {
+        payload: JSON.stringify(payload),
+      },
+    });
+  }
+
+  public async sendNotifications(tokens: string[], payload: unknown) {
+    return this.messaging.sendEachForMulticast({
+      tokens,
+      data: {
+        payload: JSON.stringify(payload),
+      },
+    });
   }
 
   public getRemoteConfig() {
     return this.remoteConfig.getTemplate();
-  }
-
-  public async getEncryptionConfig() {
-    const config = await this.getRemoteConfig();
-
-    const encryptionConfig = JSON.parse(
-      (
-        config.parameters?.ENCRYPTION?.defaultValue as
-          | undefined
-          | { value: string }
-      )?.value ?? '{}'
-    ) as HourChat.Encryption.EncryptionConfig;
-
-    if (!encryptionConfig) return;
-
-    this.encryptionConfig = encryptionConfig;
-
-    return encryptionConfig;
   }
 }
 

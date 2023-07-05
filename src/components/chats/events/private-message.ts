@@ -7,6 +7,9 @@ import ENVIRONMENT from '../../../config/environment';
 import { createOrUseEncryption } from '../../encryptions/events';
 import { CHAT_TYPE } from '../../../shares/constant';
 import { encryptMessageMetadata } from '../utils/common';
+import { notifyUser } from '../../device-tokens/events';
+import User from '../../users/models';
+import { createFullName } from '../../users/utils/common';
 
 const chatBasePath = ENVIRONMENT.CHAT_BASE_PATH;
 
@@ -54,6 +57,9 @@ export async function sendPrivateMessage(
   };
 
   const encryption = await createOrUseEncryption(encryptionPayload);
+  const sender = await User.instance.findOne({
+    where: { id: senderId },
+  });
 
   const timestamp = Timestamp.now();
 
@@ -65,6 +71,16 @@ export async function sendPrivateMessage(
     },
     encryption.dataValues
   );
+
+  const notificationPayload = {
+    title: createFullName(sender?.dataValues ?? null) ?? 'New message',
+    body: payload.body ?? '',
+    senderId,
+  };
+
+  if (_.isEmpty(notificationPayload.body) && payload.files?.length) {
+    notificationPayload.body = `${payload.files.length} Files`;
+  }
 
   const { firestore } = Firebase.instance;
 
@@ -91,6 +107,7 @@ export async function sendPrivateMessage(
     ),
     firestore.collection(senderObj.messagePath).add(messageData),
     firestore.collection(receiverObj.messagePath).add(messageData),
+    notifyUser(receiverId, notificationPayload),
   ]);
 }
 

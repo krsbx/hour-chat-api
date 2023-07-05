@@ -56,4 +56,15 @@ router.delete(
   middlewares.users.delete.deleteUserMw
 );
 
+// POST /users/:id/delete
+router.post(
+  '/:id/delete',
+  middlewares.auth.common.validateUserAccessTokenMw,
+  middlewares.auth.common.validateUserAccessMw,
+  middlewares.users.common.validateDeleteUserPayloadMw,
+  middlewares.users.read.getUserMw,
+  middlewares.auth.read.comparePasswordMw,
+  middlewares.users.delete.deleteUserMw
+);
+
 export default router;
