@@ -36,8 +36,11 @@ export const checkUserAccessMw = asyncMw<{
     req.encryption.dataValues.senderId,
   ];
 
-  if (isPrivate && !_.includes(members, req.currentUser.id)) {
-    return res.status(403).json(createForbiddenResponse());
+  if (isPrivate) {
+    if (!_.includes(members, req.currentUser.id))
+      return res.status(403).json(createForbiddenResponse());
+
+    return next();
   }
 
   const group = await Group.instance.findOne({
