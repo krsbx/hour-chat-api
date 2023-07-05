@@ -68,3 +68,7 @@ export const updateUserSchema = z
       });
     }
   });
+
+export const deleteUserSchema = z.object({
+  password: z.string().min(5),
+});

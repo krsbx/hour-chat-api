@@ -25,6 +25,7 @@ function postFactory(factoryModel: UserModel) {
       'email',
       'phoneNumber',
       'password',
+      'dob',
       'avatar',
     ]);
 

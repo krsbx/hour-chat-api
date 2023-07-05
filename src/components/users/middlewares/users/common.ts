@@ -17,3 +17,11 @@ export const validateUpdateUserPayloadMw = asyncMw<{
 
   return next();
 });
+
+export const validateDeleteUserPayloadMw = asyncMw<{
+  reqBody: z.infer<(typeof schema.users)['deleteUserSchema']>;
+}>(async (req, res, next) => {
+  req.body = await schema.users.deleteUserSchema.parseAsync(req.body);
+
+  return next();
+});

@@ -11,6 +11,7 @@ import {
 } from '../utils/common';
 import db from '../../../models';
 import Group from '../../groups/models';
+import { notifyUsers } from '../../device-tokens/events';
 
 const chatBasePath = ENVIRONMENT.CHAT_BASE_PATH;
 
@@ -82,10 +83,20 @@ export async function sendGroupMessage(
     encryption.dataValues
   );
 
+  const notificationPayload = {
+    title: group.dataValues.name,
+    body: payload.body ?? '',
+    senderId,
+  };
+
+  if (_.isEmpty(notificationPayload.body) && payload.files?.length) {
+    notificationPayload.body = `${payload.files.length} Files`;
+  }
+
   const { firestore } = Firebase.instance;
 
-  return Promise.all(
-    _.map(group?.dataValues?.members ?? [], (member) => {
+  return Promise.all([
+    ..._.map(group?.dataValues?.members ?? [], (member) => {
       const baseMemberPath = `${basePath}/${member}`;
       const groupPath = `${baseMemberPath}/groups/${uuid}`;
 
@@ -103,8 +114,9 @@ export async function sendGroupMessage(
           { merge: true }
         ),
       ]);
-    })
-  );
+    }),
+    notifyUsers(group.dataValues.members, notificationPayload),
+  ]);
 }
 
 export async function updateGroupMessageTyping(
@@ -184,7 +196,14 @@ export async function removeFromGroup(
           .set(informationData, { merge: true })
       ),
       ..._.map(members, (member) =>
-        firestore.doc(`${basePath}/${member}/groups/${uuid}`).delete()
+        firestore.doc(`${basePath}/${member}}`).set(
+          {
+            [uuid]: FieldValue.delete(),
+          },
+          {
+            merge: true,
+          }
+        )
       ),
     ]);
   });
