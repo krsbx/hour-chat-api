@@ -71,7 +71,8 @@ export async function sendPrivateMessage(
 
   const { firestore } = Firebase.instance;
 
-  return Promise.all([
+  const promises = [
+    // Sender Side
     firestore.doc(senderObj.basePath).set(
       {
         [receiverId]: {
@@ -82,23 +83,31 @@ export async function sendPrivateMessage(
       },
       { merge: true }
     ),
-    firestore.doc(receiverObj.basePath).set(
-      {
-        [senderId]: {
-          ...messageData,
-          uuid: receiverId,
-          total: FieldValue.increment(1),
-        },
-      },
-      { merge: true }
-    ),
     firestore.doc(senderObj.messagePath).set(messageData, {
       merge: true,
     }),
-    firestore.doc(receiverObj.messagePath).set(messageData, {
-      merge: true,
-    }),
-  ]);
+  ];
+
+  // Receiver Side
+  if (receiverId !== senderId) {
+    promises.push(
+      firestore.doc(receiverObj.basePath).set(
+        {
+          [senderId]: {
+            ...messageData,
+            uuid: receiverId,
+            total: FieldValue.increment(1),
+          },
+        },
+        { merge: true }
+      ),
+      firestore.doc(receiverObj.messagePath).set(messageData, {
+        merge: true,
+      })
+    );
+  }
+
+  return Promise.all(promises);
 }
 
 export async function updatePrivateMessageTyping(

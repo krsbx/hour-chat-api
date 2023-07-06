@@ -32,7 +32,11 @@ export const sendPrivateMessageMw = asyncMw<{
   }
 
   await events.privateMessage.sendPrivateMessage(req.body);
-  await notifyUser(receiverId, notification);
+
+  // Send notification if the receiver is not the user
+  if (senderId !== receiverId) {
+    await notifyUser(receiverId, notification);
+  }
 
   return res.status(200).json({
     ...createCodeStatus(200),
