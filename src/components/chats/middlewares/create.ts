@@ -8,6 +8,7 @@ import events from '../events';
 import { notifyUser, notifyUsers } from '../../device-tokens/events';
 import { createFullName } from '../../users/utils/common';
 import { BaseGroupModel } from '../../groups/models/attributes';
+import { CHAT_TYPE } from '../../../shares/constant';
 
 export const sendPrivateMessageMw = asyncMw<{
   reqBody: z.infer<(typeof schema.chats)['privateMessageSchema']>;
@@ -22,6 +23,8 @@ export const sendPrivateMessageMw = asyncMw<{
     title: createFullName(req.sender.dataValues) ?? 'New message',
     body: body ?? '',
     senderId,
+    type: CHAT_TYPE.PRIVATE,
+    uuid: senderId,
   };
 
   if (_.isEmpty(notification.body) && files?.length) {
@@ -55,11 +58,14 @@ export const sendGroupMessageMw = asyncMw<{
   };
 }>(async (req, res) => {
   const { senderId, body, files } = req.body;
+  const { name, id } = req.group.dataValues;
 
   const notification = {
-    title: req.group.dataValues.name,
+    title: name,
     body: body ?? '',
     senderId,
+    type: CHAT_TYPE.GROUP,
+    uuid: id,
   };
 
   if (_.isEmpty(notification.body) && files?.length) {
