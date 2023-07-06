@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import { z } from 'zod';
+import { v4 as uuidv4 } from 'uuid';
 import { FieldValue, Timestamp } from 'firebase-admin/firestore';
 import schema from '../../../shares/schema';
 import Firebase from '../../../shares/Firebase';
@@ -15,6 +16,8 @@ function createSenderReceiverPath(
 ) {
   const { receiverId, senderId } = payload;
 
+  const messageUuid = uuidv4();
+
   const basePath = `${chatBasePath}/privates/users`;
   const senderObj = {
     basePath: `${basePath}/${senderId}`,
@@ -22,7 +25,7 @@ function createSenderReceiverPath(
       return `${this.basePath}/${receiverId}/information`;
     },
     get messagePath() {
-      return `${this.informationPath}/messages`;
+      return `${this.informationPath}/messages/${messageUuid}`;
     },
   };
   const receiverObj = {
@@ -31,7 +34,7 @@ function createSenderReceiverPath(
       return `${this.basePath}/${senderId}/information`;
     },
     get messagePath() {
-      return `${this.informationPath}/messages`;
+      return `${this.informationPath}/messages/${messageUuid}`;
     },
   };
 
@@ -89,8 +92,12 @@ export async function sendPrivateMessage(
       },
       { merge: true }
     ),
-    firestore.collection(senderObj.messagePath).add(messageData),
-    firestore.collection(receiverObj.messagePath).add(messageData),
+    firestore.doc(senderObj.messagePath).set(messageData, {
+      merge: true,
+    }),
+    firestore.doc(receiverObj.messagePath).set(messageData, {
+      merge: true,
+    }),
   ]);
 }
 
