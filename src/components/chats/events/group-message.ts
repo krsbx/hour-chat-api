@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import _ from 'lodash';
+import { v4 as uuidv4 } from 'uuid';
 import { FieldValue, Timestamp } from 'firebase-admin/firestore';
 import schema from '../../../shares/schema';
 import Firebase from '../../../shares/Firebase';
@@ -66,6 +67,7 @@ export async function sendGroupMessage(
 
   const basePath = `${chatBasePath}/groups/users`;
   const timestamp = Timestamp.now();
+  const messageUuid = uuidv4();
 
   const informationData: Partial<HourChat.Firestore.Metadata> = {
     timestamp,
@@ -90,7 +92,9 @@ export async function sendGroupMessage(
       const groupPath = `${baseMemberPath}/groups/${uuid}`;
 
       return Promise.all([
-        firestore.collection(`${groupPath}/messages`).add(messageData),
+        firestore
+          .doc(`${groupPath}/messages/${messageUuid}`)
+          .set(messageData, { merge: true }),
         firestore.doc(groupPath).set(informationData, { merge: true }),
         firestore.doc(baseMemberPath).set(
           {
