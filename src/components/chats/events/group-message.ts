@@ -11,7 +11,7 @@ import {
 } from '../utils/common';
 import db from '../../../models';
 import Group from '../../groups/models';
-import { notifyUsers } from '../../device-tokens/events';
+import { BaseGroupModel } from '../../groups/models/attributes';
 
 const chatBasePath = ENVIRONMENT.CHAT_BASE_PATH;
 
@@ -59,7 +59,8 @@ export async function createGroupMessageGroup(
 }
 
 export async function sendGroupMessage(
-  payload: z.infer<(typeof schema.chats)['groupMessageSchema']>
+  payload: z.infer<(typeof schema.chats)['groupMessageSchema']>,
+  group: BaseGroupModel
 ) {
   const { senderId, uuid } = payload;
 
@@ -70,9 +71,7 @@ export async function sendGroupMessage(
     timestamp,
   };
 
-  const [group, encryption] = await getGroupEncryption(uuid);
-
-  if (!group || !isUserInGroup(group, senderId)) return;
+  const encryption = await getGroupEncryption(uuid);
 
   const messageData = encryptMessageMetadata(
     {
@@ -83,20 +82,10 @@ export async function sendGroupMessage(
     encryption.dataValues
   );
 
-  const notificationPayload = {
-    title: group.dataValues.name,
-    body: payload.body ?? '',
-    senderId,
-  };
-
-  if (_.isEmpty(notificationPayload.body) && payload.files?.length) {
-    notificationPayload.body = `${payload.files.length} Files`;
-  }
-
   const { firestore } = Firebase.instance;
 
-  return Promise.all([
-    ..._.map(group?.dataValues?.members ?? [], (member) => {
+  return Promise.all(
+    _.map(group.dataValues.members, (member) => {
       const baseMemberPath = `${basePath}/${member}`;
       const groupPath = `${baseMemberPath}/groups/${uuid}`;
 
@@ -114,13 +103,13 @@ export async function sendGroupMessage(
           { merge: true }
         ),
       ]);
-    }),
-    notifyUsers(group.dataValues.members, notificationPayload),
-  ]);
+    })
+  );
 }
 
 export async function updateGroupMessageTyping(
-  payload: z.infer<(typeof schema.chats)['groupMessageTypingSchema']>
+  payload: z.infer<(typeof schema.chats)['groupMessageTypingSchema']>,
+  group: BaseGroupModel
 ) {
   const { uuid, senderId } = payload;
   const typing = payload.typing
@@ -132,14 +121,6 @@ export async function updateGroupMessageTyping(
   const informationData: Partial<HourChat.Firestore.Metadata> = {
     typing,
   };
-
-  const group = await Group.instance.findOne({
-    where: {
-      id: uuid,
-    },
-  });
-
-  if (!group || !isUserInGroup(group, senderId)) return;
 
   const { firestore } = Firebase.instance;
 
@@ -163,6 +144,10 @@ export async function removeFromGroup(
 
   const informationData: Partial<HourChat.Firestore.Metadata> = {
     members: FieldValue.arrayRemove(...members),
+  };
+
+  const recentPayload = {
+    [uuid]: FieldValue.delete(),
   };
 
   return db.sequelize.transaction(async (tx) => {
@@ -196,14 +181,9 @@ export async function removeFromGroup(
           .set(informationData, { merge: true })
       ),
       ..._.map(members, (member) =>
-        firestore.doc(`${basePath}/${member}}`).set(
-          {
-            [uuid]: FieldValue.delete(),
-          },
-          {
-            merge: true,
-          }
-        )
+        firestore.doc(`${basePath}/${member}}`).set(recentPayload, {
+          merge: true,
+        })
       ),
     ]);
   });
@@ -234,22 +214,6 @@ export async function removeGroup(
     await Group.instance.destroy(queryOption);
 
     const { firestore } = Firebase.instance;
-
-    // Remove collections
-    await Promise.all(
-      _.map(group?.dataValues?.members ?? [], (member) =>
-        Firebase.instance.deleteCollection(
-          `${basePath}/${member}/groups/${uuid}/messages`
-        )
-      )
-    );
-
-    // Remove docs
-    await Promise.all(
-      _.map(group?.dataValues?.members ?? [], (member) =>
-        firestore.doc(`${basePath}/${member}/groups/${uuid}`).delete()
-      )
-    );
 
     // Remove From Recent
     return Promise.all(

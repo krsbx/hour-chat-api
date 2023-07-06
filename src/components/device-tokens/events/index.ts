@@ -47,5 +47,7 @@ export async function notifyUsers(
     deviceTokens.map(({ dataValues }) => dataValues.token)
   );
 
+  if (!tokens.length) return;
+
   return Firebase.instance.sendNotifications(tokens, payload);
 }

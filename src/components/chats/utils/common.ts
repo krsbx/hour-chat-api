@@ -1,7 +1,5 @@
 import _ from 'lodash';
 import { BaseGroupModel } from '../../groups/models/attributes';
-import db from '../../../models';
-import Group from '../../groups/models';
 import { createOrUseEncryption } from '../../encryptions/events';
 import { CHAT_TYPE } from '../../../shares/constant';
 import { EncryptionAttribute } from '../../encryptions/models/attributes';
@@ -24,21 +22,9 @@ export async function getGroupEncryption(uuid: string) {
     type: CHAT_TYPE.GROUP,
   };
 
-  const [group, encryption] = await db.sequelize.transaction(async (tx) => {
-    const queryOption = {
-      where: {
-        id: uuid,
-      },
-      transaction: tx,
-    };
+  const encryption = await createOrUseEncryption(payload);
 
-    return Promise.all([
-      Group.instance.findOne(queryOption),
-      createOrUseEncryption(payload, tx),
-    ]);
-  });
-
-  return [group, encryption] as const;
+  return encryption;
 }
 
 export function encryptMessageMetadata(
