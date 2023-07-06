@@ -87,22 +87,30 @@ class Firebase {
     await batch.commit();
   }
 
-  public async sendNotification(token: string, payload: unknown) {
-    return this.messaging.send({
-      token,
-      data: {
-        payload: JSON.stringify(payload),
-      },
-    });
+  public async sendNotification<T>(token: string, payload: T) {
+    return this.messaging
+      .send({
+        token,
+        data: {
+          payload: JSON.stringify(payload),
+        },
+      })
+      .catch(() => {
+        // Do nothing if there is an error
+      });
   }
 
-  public async sendNotifications(tokens: string[], payload: unknown) {
-    return this.messaging.sendEachForMulticast({
-      tokens,
-      data: {
-        payload: JSON.stringify(payload),
-      },
-    });
+  public async sendNotifications<T>(tokens: string[], payload: T) {
+    return this.messaging
+      .sendEachForMulticast({
+        tokens,
+        data: {
+          payload: JSON.stringify(payload),
+        },
+      })
+      .catch(() => {
+        // Do nothing if there is an error
+      });
   }
 
   public getRemoteConfig() {

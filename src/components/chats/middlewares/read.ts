@@ -1,10 +1,15 @@
 import _ from 'lodash';
 import { z } from 'zod';
 import asyncMw from 'express-asyncmw';
-import { createCodeStatus } from '@krsbx/response-formatter';
+import {
+  createCodeStatus,
+  createNotFoundResponse,
+} from '@krsbx/response-formatter';
 import User from '../../users/models';
 import schema from '../../../shares/schema';
 import { BaseUserModel } from '../../users/models/attributes';
+import Group from '../../groups/models';
+import { BaseGroupModel } from '../../groups/models/attributes';
 
 export const checkPrivateMessageUsersExistsMw = asyncMw<{
   reqBody: z.infer<(typeof schema.chats)['privateMessageSchema']>;
@@ -45,6 +50,27 @@ export const checkPrivateMessageUsersExistsMw = asyncMw<{
 
   req.sender = sender;
   req.receiver = sender;
+
+  return next();
+});
+
+export const checkGroupExistsMw = asyncMw<{
+  reqBody: z.infer<(typeof schema.chats)['groupMessageSchema']>;
+  extends: {
+    group: BaseGroupModel;
+  };
+}>(async (req, res, next) => {
+  const group = await Group.instance.findOne({
+    where: {
+      id: req.body.uuid,
+    },
+  });
+
+  if (!group) {
+    return res.status(404).json(createNotFoundResponse('Group'));
+  }
+
+  req.group = group;
 
   return next();
 });

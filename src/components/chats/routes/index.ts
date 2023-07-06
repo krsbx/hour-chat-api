@@ -9,6 +9,7 @@ router.post(
   '/private/send',
   userMiddlewares.auth.common.validateUserAccessTokenMw,
   middlewares.common.validatePrivateMessagePayloadMw,
+  middlewares.common.validateSenderPayloadMw,
   middlewares.read.checkPrivateMessageUsersExistsMw,
   middlewares.create.sendPrivateMessageMw
 );
@@ -18,6 +19,7 @@ router.post(
   '/private/typing',
   userMiddlewares.auth.common.validateUserAccessTokenMw,
   middlewares.common.validatePrivateMessageTypingPayloadMw,
+  middlewares.common.validateSenderPayloadMw,
   middlewares.update.updatePrivateMessageTypingMw
 );
 
@@ -26,6 +28,7 @@ router.post(
   '/group',
   userMiddlewares.auth.common.validateUserAccessTokenMw,
   middlewares.common.validateCreateGroupMessagePayloadMw,
+  middlewares.common.validateGroupMemberMw,
   middlewares.read.checkGroupMessageUsersExistsMw,
   middlewares.create.createGroupMessageGroupMw
 );
@@ -35,6 +38,9 @@ router.post(
   '/group/send',
   userMiddlewares.auth.common.validateUserAccessTokenMw,
   middlewares.common.validateGroupMessagePayloadMw,
+  middlewares.common.validateSenderPayloadMw,
+  middlewares.read.checkGroupExistsMw,
+  middlewares.common.validateGroupAccessMw,
   middlewares.create.sendGroupMessageMw
 );
 
@@ -43,6 +49,9 @@ router.post(
   '/group/typing',
   userMiddlewares.auth.common.validateUserAccessTokenMw,
   middlewares.common.validateGroupMessageTypingPayloadMw,
+  middlewares.common.validateSenderPayloadMw,
+  middlewares.read.checkGroupExistsMw,
+  middlewares.common.validateGroupAccessMw,
   middlewares.update.updateGroupMessageTypingMw
 );
 
