@@ -31,7 +31,7 @@ export const privateMessageSchema = z
   })
   .and(baseMessageSchema);
 
-export const privateMessageTypingSchema = z.object({
+export const privateTypingSchema = z.object({
   senderId: z.string(),
   receiverId: z.string(),
   typing: z.boolean(),
@@ -44,13 +44,13 @@ export const groupMessageSchema = z
   })
   .and(baseMessageSchema);
 
-export const groupMessageTypingSchema = z.object({
+export const groupTypingSchema = z.object({
   senderId: z.string(),
   uuid: z.string(),
   typing: z.boolean(),
 });
 
-export const createGroupMessageSchema = z.object({
+export const createGroupSchema = z.object({
   members: z
     .array(z.string())
     .min(2)
@@ -60,7 +60,7 @@ export const createGroupMessageSchema = z.object({
   name: z.string(),
 });
 
-export const removeFromGroupSchema = z.object({
+export const modifyMemberSchema = z.object({
   members: z.union([z.string(), z.array(z.string()).min(1)]),
   senderId: z.string(),
   uuid: z.string(),
