@@ -57,8 +57,8 @@
     "patch-package": "^6.5.1",
     "prettier": "^2.8.7",
     "rimraf": "^5.0.0",
-    "sequelize-cli": "^6.6.0",
-    "sequelize-db-type": "^0.3.6",
+    "sequelize-cli": "^6.6.1",
+    "sequelize-db-type": "^0.3.9",
     "ts-node": "^10.9.1",
     "tsc-watch": "^6.0.0",
     "typescript": "^5.0.4"

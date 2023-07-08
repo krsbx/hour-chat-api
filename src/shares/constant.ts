@@ -1,7 +1,8 @@
 import _ from 'lodash';
+import appRootPath from 'app-root-path';
 import path from 'path';
 
-export const ROOT_PATH = path.join(__dirname, '../../');
+export const ROOT_PATH = appRootPath.path;
 export const ASSETS_PATH = path.join(ROOT_PATH, 'assets');
 
 export const CHAT_TYPE = {
@@ -72,10 +73,25 @@ export const ENV_NAMES = [
     },
     [] as string[]
   ),
-  'ENCRYPT_KEY',
-  'ENCRYPT_IV',
   'EMAIL_SERVICE',
   'EMAIL_USER',
   'EMAIL_PASSWORD',
   'STORAGE_BUCKET',
 ];
+
+// --- SEQUELIZE SPECIFIC CONFIGURATION --- //
+
+export const DB_CONFIG_KEY = {
+  USERNAME: 'username',
+  PASSWORD: 'password',
+  DATABASE: 'database',
+  HOST: 'host',
+  DIALECT: 'dialect',
+} as const;
+
+export const DB_CONFIG_VALUE = {
+  [DB_CONFIG_KEY.USERNAME]: 'DB_USER',
+  [DB_CONFIG_KEY.PASSWORD]: 'DB_PASSWORD',
+  [DB_CONFIG_KEY.DATABASE]: 'DB_NAME',
+  [DB_CONFIG_KEY.HOST]: 'DB_HOST',
+} as const;

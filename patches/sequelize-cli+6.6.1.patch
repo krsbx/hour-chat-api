@@ -130,7 +130,7 @@ index 0000000..fe2ee49
 +  },
 +};
 diff --git a/node_modules/sequelize-cli/lib/commands/migrate.js b/node_modules/sequelize-cli/lib/commands/migrate.js
-index 83a021c..7d668e2 100644
+index 83a021c..6fb3895 100644
 --- a/node_modules/sequelize-cli/lib/commands/migrate.js
 +++ b/node_modules/sequelize-cli/lib/commands/migrate.js
 @@ -5,6 +5,7 @@ var _yargs = require("../core/yargs");
@@ -151,14 +151,6 @@ index 83a021c..7d668e2 100644
    switch (command) {
      case 'db:migrate':
        await migrate(args);
-@@ -33,6 +37,7 @@ exports.handler = async function (args) {
-       await migrationStatus(args);
-       break;
-   }
-+
-   _process.default.exit(0);
- };
- function migrate(args) {
 diff --git a/node_modules/sequelize-cli/lib/commands/migration_generate.js b/node_modules/sequelize-cli/lib/commands/migration_generate.js
 index c0d95a0..d77f994 100644
 --- a/node_modules/sequelize-cli/lib/commands/migration_generate.js
@@ -202,7 +194,7 @@ index c0d95a0..d77f994 100644
    _process.default.exit(0);
  };
 diff --git a/node_modules/sequelize-cli/lib/commands/model_generate.js b/node_modules/sequelize-cli/lib/commands/model_generate.js
-index 287bc6b..1195927 100644
+index 287bc6b..6da51af 100644
 --- a/node_modules/sequelize-cli/lib/commands/model_generate.js
 +++ b/node_modules/sequelize-cli/lib/commands/model_generate.js
 @@ -18,12 +18,12 @@ exports.builder = yargs => (0, _yargs._underscoreOption)((0, _yargs._baseOptions
