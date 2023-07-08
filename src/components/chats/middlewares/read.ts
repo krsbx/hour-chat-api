@@ -76,7 +76,7 @@ export const checkGroupExistsMw = asyncMw<{
 });
 
 export const checkGroupMessageUsersExistsMw = asyncMw<{
-  reqBody: z.infer<(typeof schema.chats)['createGroupMessageSchema']>;
+  reqBody: z.infer<(typeof schema.chats)['createGroupSchema']>;
 }>(async (req, res, next) => {
   const members = await Promise.all(
     _.map(req.body.members, (member) =>

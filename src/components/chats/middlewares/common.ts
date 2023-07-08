@@ -4,7 +4,6 @@ import asyncMw from 'express-asyncmw';
 import { createForbiddenResponse } from '@krsbx/response-formatter';
 import schema from '../../../shares/schema';
 import { UserAttribute } from '../../users/models/attributes';
-import { BaseGroupModel } from '../../groups/models/attributes';
 
 export const validateSenderPayloadMw = asyncMw<{
   reqBody: { senderId: string };
@@ -41,17 +40,17 @@ export const validatePrivateMessagePayloadMw = asyncMw<{
 });
 
 export const validatePrivateMessageTypingPayloadMw = asyncMw<{
-  reqBody: z.infer<(typeof schema.chats)['privateMessageTypingSchema']>;
+  reqBody: z.infer<(typeof schema.chats)['privateTypingSchema']>;
 }>(async (req, res, next) => {
-  req.body = await schema.chats.privateMessageTypingSchema.parseAsync(req.body);
+  req.body = await schema.chats.privateTypingSchema.parseAsync(req.body);
 
   return next();
 });
 
 export const validateCreateGroupMessagePayloadMw = asyncMw<{
-  reqBody: z.infer<(typeof schema.chats)['createGroupMessageSchema']>;
+  reqBody: z.infer<(typeof schema.chats)['createGroupSchema']>;
 }>(async (req, res, next) => {
-  req.body = await schema.chats.createGroupMessageSchema.parseAsync(req.body);
+  req.body = await schema.chats.createGroupSchema.parseAsync(req.body);
 
   return next();
 });
@@ -64,23 +63,29 @@ export const validateGroupMessagePayloadMw = asyncMw<{
   return next();
 });
 
-export const validateGroupAccessMw = asyncMw<{
-  reqBody: z.infer<(typeof schema.chats)['groupMessageSchema']>;
-  extends: {
-    group: BaseGroupModel;
-  };
+export const validateGroupMessageTypingPayloadMw = asyncMw<{
+  reqBody: z.infer<(typeof schema.chats)['groupTypingSchema']>;
 }>(async (req, res, next) => {
-  if (!_.includes(req.group.dataValues.members, req.body.senderId)) {
-    return res.status(403).json(createForbiddenResponse());
-  }
+  req.body = await schema.chats.groupTypingSchema.parseAsync(req.body);
 
   return next();
 });
 
-export const validateGroupMessageTypingPayloadMw = asyncMw<{
-  reqBody: z.infer<(typeof schema.chats)['groupMessageTypingSchema']>;
+export const validateModifyGroupMemberPayloadMw = asyncMw<{
+  reqBody: z.infer<(typeof schema.chats)['modifyMemberSchema']>;
 }>(async (req, res, next) => {
-  req.body = await schema.chats.groupMessageTypingSchema.parseAsync(req.body);
+  req.body = await schema.chats.modifyMemberSchema.parseAsync(req.body);
+
+  return next();
+});
+
+export const validateRemoveGroupMemberMw = asyncMw<{
+  reqBody: z.infer<(typeof schema.chats)['removeGroupSchema']>;
+  extends: {
+    currentUser: Omit<UserAttribute, 'password'>;
+  };
+}>(async (req, res, next) => {
+  req.body = await schema.chats.removeGroupSchema.parseAsync(req.body);
 
   return next();
 });

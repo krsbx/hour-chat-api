@@ -6,9 +6,9 @@ import events from '../events';
 import { BaseGroupModel } from '../../groups/models/attributes';
 
 export const updatePrivateMessageTypingMw = asyncMw<{
-  reqBody: z.infer<(typeof schema.chats)['privateMessageTypingSchema']>;
+  reqBody: z.infer<(typeof schema.chats)['privateTypingSchema']>;
 }>(async (req, res) => {
-  await events.privateMessage.updatePrivateMessageTyping(req.body);
+  await events.typing.updatePrivateTyping(req.body);
 
   return res.status(200).json({
     ...createCodeStatus(200),
@@ -17,15 +17,33 @@ export const updatePrivateMessageTypingMw = asyncMw<{
 });
 
 export const updateGroupMessageTypingMw = asyncMw<{
-  reqBody: z.infer<(typeof schema.chats)['groupMessageTypingSchema']>;
+  reqBody: z.infer<(typeof schema.chats)['groupTypingSchema']>;
   extends: {
     group: BaseGroupModel;
   };
 }>(async (req, res) => {
-  await events.groupMessage.updateGroupMessageTyping(req.body, req.group);
+  await events.typing.updateGroupTyping(req.body, req.group);
 
   return res.status(200).json({
     ...createCodeStatus(200),
     message: 'Typing status updated successfully',
+  });
+});
+
+export const modifyGroupMemberMw = asyncMw<{
+  reqBody: z.infer<(typeof schema.chats)['modifyMemberSchema']>;
+  reqQuery: {
+    adding?: boolean;
+  };
+  extends: {
+    group: BaseGroupModel;
+  };
+}>(async (req, res) => {
+  if (req.query.adding) await events.group.addMember(req.body, req.group);
+  else await events.group.removeMember(req.body, req.group);
+
+  return res.status(200).json({
+    ...createCodeStatus(200),
+    message: 'Member/s modified successfully',
   });
 });

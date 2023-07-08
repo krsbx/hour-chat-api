@@ -1,9 +1,11 @@
 import _ from 'lodash';
-import { BaseGroupModel } from '../../groups/models/attributes';
-import { createOrUseEncryption } from '../../encryptions/events';
+import { v4 as uuidv4 } from 'uuid';
 import { CHAT_TYPE } from '../../../shares/constant';
+import { createOrUseEncryption } from '../../encryptions/events';
 import { EncryptionAttribute } from '../../encryptions/models/attributes';
 import { encryptText } from '../../encryptions/utils/common';
+import { BaseGroupModel } from '../../groups/models/attributes';
+import ENVIRONMENT from '../../../config/environment';
 
 export function isUserInGroup(payload: BaseGroupModel, senderId: string) {
   if (!payload) return false;
@@ -27,8 +29,8 @@ export async function getGroupEncryption(uuid: string) {
   return encryption;
 }
 
-export function encryptMessageMetadata(
-  payload: CreateOptional<HourChat.Firestore.MessageData, 'body' | 'files'>,
+export function encryptMessage(
+  payload: HourChat.Firestore.MessageData,
   config: EncryptionAttribute
 ) {
   const clone = {
@@ -41,4 +43,42 @@ export function encryptMessageMetadata(
   };
 
   return clone;
+}
+
+export function getSenderReceiverPath(payload: {
+  senderId: string;
+  receiverId: string;
+}) {
+  const { receiverId, senderId } = payload;
+
+  const messageUuid = uuidv4();
+
+  const basePath = `${ENVIRONMENT.CHAT_BASE_PATH}/privates/users`;
+  const sender = {
+    get path() {
+      return `${basePath}/${senderId}`;
+    },
+    get information() {
+      return `${this.path}/${receiverId}/information`;
+    },
+    get message() {
+      return `${this.information}/messages/${messageUuid}`;
+    },
+  };
+  const receiver = {
+    get path() {
+      return `${basePath}/${receiverId}`;
+    },
+    get information() {
+      return `${this.path}/${senderId}/information`;
+    },
+    get message() {
+      return `${this.information}/messages/${messageUuid}`;
+    },
+  };
+
+  return {
+    sender,
+    receiver,
+  };
 }

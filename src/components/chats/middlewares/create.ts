@@ -31,7 +31,7 @@ export const sendPrivateMessageMw = asyncMw<{
     notification.body = `${files.length} Files`;
   }
 
-  await events.privateMessage.sendPrivateMessage(req.body);
+  await events.messaging.sendPrivateMessage(req.body);
 
   // Send notification if the receiver is not the user
   if (senderId !== receiverId) {
@@ -45,9 +45,9 @@ export const sendPrivateMessageMw = asyncMw<{
 });
 
 export const createGroupMessageGroupMw = asyncMw<{
-  reqBody: z.infer<(typeof schema.chats)['createGroupMessageSchema']>;
+  reqBody: z.infer<(typeof schema.chats)['createGroupSchema']>;
 }>(async (req, res) => {
-  await events.groupMessage.createGroupMessageGroup(req.body);
+  await events.group.createGroup(req.body);
 
   return res.status(200).json({
     ...createCodeStatus(200),
@@ -76,12 +76,11 @@ export const sendGroupMessageMw = asyncMw<{
     notification.body = `${files.length} Files`;
   }
 
-  const members = [...req.group.dataValues.members];
-  const index = members.findIndex((member) => member === senderId);
+  const members = req.group.dataValues.members.filter(
+    (member) => member !== senderId
+  );
 
-  if (index > -1) members.splice(index, 1);
-
-  await events.groupMessage.sendGroupMessage(req.body, req.group);
+  await events.messaging.sendGroupMessage(req.body, req.group);
   await notifyUsers(members, notification);
 
   return res.status(200).json({

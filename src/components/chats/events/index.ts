@@ -1,4 +1,5 @@
-import * as groupMessage from './group-message';
-import * as privateMessage from './private-message';
+import * as group from './group';
+import * as messaging from './messaging';
+import * as typing from './typing';
 
-export default { groupMessage, privateMessage };
+export default { messaging, group, typing };
