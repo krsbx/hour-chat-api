@@ -6,7 +6,7 @@ import _ from 'lodash';
 import { Worker } from 'worker_threads';
 import { BuildOptions, CreationAttributes } from 'sequelize';
 import db from '../models';
-import { ENV_NAMES } from './constant';
+import { ENV_NAMES, ROOT_PATH } from './constant';
 import { MODEL_NAME } from './models';
 
 dotenvConfig();
@@ -90,9 +90,9 @@ export function buildModel<
 }
 
 export async function prepareFileUpload() {
-  const dirs = await fs.readdir(appRootPath.path);
+  const dirs = await fs.readdir(ROOT_PATH);
 
   if (dirs.includes('tmp')) return;
 
-  return fs.mkdirp(path.join(appRootPath.path, 'tmp'));
+  return fs.mkdirp(path.join(ROOT_PATH, 'tmp'));
 }
