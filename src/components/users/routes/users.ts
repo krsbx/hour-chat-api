@@ -31,7 +31,6 @@ router.get(
 router.get(
   '/:id',
   middlewares.auth.common.validateUserAccessTokenMw,
-  middlewares.auth.common.validateUserAccessMw,
   middlewares.users.read.getUserMw,
   middlewares.users.response.returnUserMw
 );

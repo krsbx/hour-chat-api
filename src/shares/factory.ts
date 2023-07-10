@@ -67,7 +67,9 @@ function factory<
       ...options,
       where: where as never,
       offset,
-      limit,
+      ...(limit && {
+        limit,
+      }),
       order: order.length ? order : [['createdAt', 'DESC']],
       ...otherOptions,
     };
